@@ -103,7 +103,7 @@ body {
 }
 
 #inputMessage {
-    width: 90%;
+    width: 100%;
     margin-top: 10px;
 }
 
@@ -146,4 +146,20 @@ body {
 .chatListCol{
     overflow: auto;
     height: 80vh;
+}
+
+#paperclipButtonCol {
+    width: 3%;
+    padding-left: 0px;
+}
+
+#inputMessageCol {
+    width: 92%;
+    padding: 0px;
+}
+
+#sendCol {
+    width: 5%;
+    padding-right: 0px;
+    padding-top: 10px;
 }

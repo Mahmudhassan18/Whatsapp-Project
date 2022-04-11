@@ -242,13 +242,23 @@
             </div>
             <div class="sendMessageTab">
               <form method="post">
-                <button type="button" class="btn transparentButton">
-                  <h3>
-                    <i class="bi bi-paperclip"></i>
-                  </h3>
-                </button>
-                <input type="text" placeholder="New message here..." id="inputMessage" name="message">
-                <input type="submit" value="Send" class="borderlessButton"/>
+                <div class="container">
+                  <div class="row">
+                    <div class="col-1" id="paperclipButtonCol">
+                      <button type="button" class="btn transparentButton">
+                        <h3>
+                          <i class="bi bi-paperclip"></i>
+                        </h3>
+                      </button>      
+                    </div>
+                    <div class="col-11" id="inputMessageCol">
+                      <input type="text" placeholder="New message here..." id="inputMessage" name="message">
+                    </div>
+                    <div class="col-1" id="sendCol">
+                      <input type="submit" value="Send" class="borderlessButton"/>
+                    </div>
+                  </div>
+                </div>
               </form>
             </div>
           </div>
