@@ -1,4 +1,11 @@
+html{
+    height: 100%;
+    margin: 0;
+}
+
 body {
+    height: 100%;
+    margin: 0;
     background-color: lightgrey;
 }
 
@@ -13,7 +20,6 @@ body {
     margin-right: 100px;
 
     border-radius: 25px;
-
     background-color: #F6F6F6;
 }
 
@@ -22,13 +28,28 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    z-index: 1;
     background-color: transparent;
 }
+
 
 .logo{
     padding-bottom: 20px;
     padding-left: 50%;
+}
+    
+.chat-box{
+    padding-left: 30px;
+    padding-top: 45px;
+    padding-right: 30px;
+    padding-bottom: 45px;
+
+    margin-left: 100px;
+    margin-top: 50px;
+    margin-right: 100px;
+
+    border-radius: 20px;
+    background-color: white;
+
 }
 
 #greenSquare {
@@ -111,4 +132,18 @@ body {
     margin-bottom: 15px;
     margin-right: 100px;
     float: left;
+}
+.list-group-item{
+    border-bottom: 0.5;
+
+}
+
+.list-group-item:hover{
+    border-bottom: 0.5;
+    background-color: lightgray;
+}
+
+.chatListCol{
+    overflow: auto;
+    height:750px;
 }
