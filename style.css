@@ -26,6 +26,11 @@ body {
     background-color: transparent;
 }
 
+.logo{
+    padding-bottom: 20px;
+    padding-left: 50%;
+}
+
 #greenSquare {
     background-color: green;
     width: 100%;
