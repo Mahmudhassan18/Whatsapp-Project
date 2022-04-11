@@ -92,7 +92,7 @@ body {
 
 .chatHistory {
     background-color: lightgoldenrodyellow;
-    height: 700px;
+    height: calc(80vh - 50px);
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -145,5 +145,5 @@ body {
 
 .chatListCol{
     overflow: auto;
-    height:750px;
+    height: 80vh;
 }
