@@ -37,3 +37,78 @@ body {
     height: 200px;
     position: absolute;
 }
+
+.chatBox {
+    margin-left: 100px;
+    margin-top: 50px;
+    margin-right: 100px;
+}
+
+.chatBox > .row > * {
+    padding: 0px;
+}
+
+.user {
+    padding-left: 30px !important;
+    padding-top: 10px !important;
+    padding-right: 30px !important;
+    padding-bottom: 10px !important;
+    background-color: #EAEAEA;
+    font-size: 24pt;
+}
+
+.transparentButton {
+    background-color: transparent;
+    padding-left: 0px;
+    padding-top: 5px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+}
+
+#addContact {
+    float: right;
+}
+
+.chatHistory {
+    background-color: lightgoldenrodyellow;
+    height: 700px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sendMessageTab {
+    background-color: #EAEAEA;
+    height: 50px;
+}
+
+#inputMessage {
+    width: 90%;
+    margin-top: 10px;
+}
+
+.borderlessButton {
+    color: blue;
+    border: 0px;
+}
+
+.usersSpeechBubble {
+    padding: 10px;
+    background-color: lightgreen;
+    border-radius: 25px;
+    margin-top: 15px;
+    margin-left: 100px;
+    margin-bottom: 15px;
+    margin-right: 10px;
+    float: right;
+}
+
+.othersSpeechBubble {
+    padding: 10px;
+    background-color: white;
+    border-radius: 25px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-bottom: 15px;
+    margin-right: 100px;
+    float: left;
+}
