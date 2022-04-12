@@ -40,7 +40,6 @@ function signUp () {
     var inputPassword = document.getElementById("inputPassword").value;
     var passwordVerfication = document.getElementById("verifyPassword").value;
     var inputPfp = document.getElementById("inputPfp").value;
-    console.log(inputPfp);
 
     if (inputUsername == "" || inputNickname == "" || inputPassword == "" || passwordVerfication == "" || inputPfp == "") {
         alert("You must fill all fields");
@@ -89,8 +88,36 @@ function signUp () {
         password: inputPassword,
         pfp: inputPfp
     });
+}
 
-    for(i=0; i < amountOfUsers + 1; i++) {
-        console.log(usersObj[i]);
+function addContact() {
+    var inputContact = document.getElementById("inputContact").value;
+    if (inputContact == "") {
+        alert("You must fill the contact's username field");
+        return;
     }
+
+    var contact = null;
+    var amountOfUsers = usersObj.length;
+    for(i=0; i < amountOfUsers; i++){
+        if(inputContact == usersObj[i].username){
+            contact = usersObj[i];
+            break;
+        }
+    }
+    if (contact == null) {
+        alert("There is no user with this username");
+        return;
+    }
+
+    var chatList = document.getElementById("chatList");
+    chatList.innerHTML += "<li class=\"list-group-item d-flex justify-content-between align-items-start\">\
+                            <img src=\"" + contact.pfp + "\" alt=\"Avatar\" style=\"width:60px\">\
+                            <div class=\"ms-2 me-auto\">\
+                                <div class=\"fw-bold\">" + contact.nickname + "</div>\
+                                Latest Message\
+                            </div>\
+                            <span class=\"badge bg-primary rounded-pill\">14</span>\
+                        </li>\
+    ";
 }
