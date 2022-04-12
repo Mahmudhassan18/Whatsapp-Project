@@ -14,8 +14,6 @@ var usersObj = [
 ]
 
 
-
-
 function logIn(){
     var username = document.getElementById("inputUsername").value
     var password = document.getElementById("inputPassword").value
@@ -29,5 +27,6 @@ function logIn(){
     if(!found){
         alert("Wrong username or password")
     }
-
 }
+
+
