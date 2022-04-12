@@ -101,12 +101,8 @@ body {
 .sendMessageTab {
     background-color: #EAEAEA;
     width: 100%;
+    height: 50px;
     
-}
-
-#inputMessage {
-    width: 100%;
-    margin-top: 10px;
 }
 
 .borderlessButton {
@@ -150,25 +146,12 @@ body {
     height: 80vh;
 }
 
-
-#inputMessageCol {
-    width: 92%;
-    padding: 0px;
-}
-
-#sendCol {
-    width: 5%;
-    padding-right: 0px;
-    padding-top: 10px;
-}
-
 .file-attach{
     margin-left: 18px;
     padding: 0px;
-    padding-top: 5px;
 }
 
 .send-message{
-    padding-top: 10px;
+    padding-top: 5px;
     padding-right: 5px;
 }
