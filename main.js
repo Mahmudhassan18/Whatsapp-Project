@@ -20,8 +20,6 @@ var usersObj = [
 ]
 
 
-
-
 function logIn(){
     var username = document.getElementById("inputUsername").value;
     var password = document.getElementById("inputPassword").value;
@@ -41,13 +39,14 @@ function signUp () {
     var inputNickname = document.getElementById("inputNickname").value;
     var inputPassword = document.getElementById("inputPassword").value;
     var passwordVerfication = document.getElementById("verifyPassword").value;
-    var inputPfp = document.getElementById("inputPfp");
+    var inputPfp = document.getElementById("inputPfp").value;
+    console.log(inputPfp);
 
-    if (inputUsername == "" || inputNickname == "" || inputPassword == "" || passwordVerfication == "" || inputPfp == null) {
+    if (inputUsername == "" || inputNickname == "" || inputPassword == "" || passwordVerfication == "" || inputPfp == "") {
         alert("You must fill all fields");
         return;
     }
-    inputPfp = "images/" + inputPfp.files[0].name;
+    inputPfp = "images/" + inputPfp.replace("C:\\fakepath\\", "");
 
     var amountOfUsers = usersObj.length;
     for(i=0; i < amountOfUsers; i++){

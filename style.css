@@ -1,7 +1,6 @@
 html{
     height: 100%;
     margin: 0;
-
 }
 
 body {
@@ -149,7 +148,11 @@ body {
 }
 
 .file-attach{
-    margin-left: 18px;
+    margin-left: 15px;
+    padding: 0px;
+}
+
+.microphone{
     padding: 0px;
 }
 
