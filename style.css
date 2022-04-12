@@ -1,6 +1,7 @@
 html{
     height: 100%;
     margin: 0;
+
 }
 
 body {
@@ -99,7 +100,8 @@ body {
 
 .sendMessageTab {
     background-color: #EAEAEA;
-    height: 50px;
+    width: 100%;
+    
 }
 
 #inputMessage {
@@ -148,10 +150,6 @@ body {
     height: 80vh;
 }
 
-#paperclipButtonCol {
-    width: 3%;
-    padding-left: 0px;
-}
 
 #inputMessageCol {
     width: 92%;
@@ -162,4 +160,15 @@ body {
     width: 5%;
     padding-right: 0px;
     padding-top: 10px;
+}
+
+.file-attach{
+    margin-left: 18px;
+    padding: 0px;
+    padding-top: 5px;
+}
+
+.send-message{
+    padding-top: 10px;
+    padding-right: 5px;
 }
