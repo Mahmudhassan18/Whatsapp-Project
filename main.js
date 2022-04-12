@@ -20,13 +20,13 @@ var usersObj = [
 ]
 
 
-function logIn(){
+function logIn() {
     var username = document.getElementById("inputUsername").value;
     var password = document.getElementById("inputPassword").value;
     var amountOfUsers = usersObj.length;
-    for(i=0; i < amountOfUsers; i++){
-        if(username == usersObj[i].username && password == usersObj[i].password){
-            window.location.href="chat.html";
+    for (i = 0; i < amountOfUsers; i++) {
+        if (username == usersObj[i].username && password == usersObj[i].password) {
+            window.location.href = "chat.html";
             return;
         }
     }
@@ -34,13 +34,12 @@ function logIn(){
 }
 
 
-function signUp () {
+function signUp() {
     var inputUsername = document.getElementById("inputUsername").value;
     var inputNickname = document.getElementById("inputNickname").value;
     var inputPassword = document.getElementById("inputPassword").value;
     var passwordVerfication = document.getElementById("verifyPassword").value;
     var inputPfp = document.getElementById("inputPfp").value;
-    console.log(inputPfp);
 
     if (inputUsername == "" || inputNickname == "" || inputPassword == "" || passwordVerfication == "" || inputPfp == "") {
         alert("You must fill all fields");
@@ -49,8 +48,8 @@ function signUp () {
     inputPfp = "images/" + inputPfp.replace("C:\\fakepath\\", "");
 
     var amountOfUsers = usersObj.length;
-    for(i=0; i < amountOfUsers; i++){
-        if(inputUsername == usersObj[i].username){
+    for (i = 0; i < amountOfUsers; i++) {
+        if (inputUsername == usersObj[i].username) {
             alert("There already exists a user with this username");
             return;
         }
@@ -61,7 +60,7 @@ function signUp () {
     var isThereAnUppercaseLetter = false;
     var isThereALowercaseLetter = false;
 
-    for(i=0; i < passwordLen; i++) {
+    for (i = 0; i < passwordLen; i++) {
         if ('0' <= inputPassword[i] && inputPassword[i] <= '9') {
             isThereADigit = true;
         }
@@ -78,7 +77,7 @@ function signUp () {
         return;
     }
 
-    if(inputPassword != passwordVerfication){
+    if (inputPassword != passwordVerfication) {
         alert("The password verification does not match");
         return;
     }
@@ -90,7 +89,32 @@ function signUp () {
         pfp: inputPfp
     });
 
-    for(i=0; i < amountOfUsers + 1; i++) {
-        console.log(usersObj[i]);
+    window.location.href = "login.html";
+}
+
+function sendmessage() {
+    var message = document.getElementById("message-to-send").value;
+    if (message != '') {
+        var element = document.getElementById("sentChat");
+
+        var rowDiv = document.createElement("div");
+        var colDiv = document.createElement("div");
+        var spanD = document.createElement("span");
+
+        var message = document.createTextNode(message);
+
+        rowDiv.className = "row";
+        colDiv.className = "col";
+        spanD.className = "usersSpeechBubble";
+
+        spanD.appendChild(message);
+        colDiv.appendChild(spanD);
+        rowDiv.appendChild(colDiv);
+        sentChat.appendChild(rowDiv);
+
+        document.getElementById("message-to-send").value = "";
+        element.scrollTop = element.scrollHeight;
     }
 }
+
+
