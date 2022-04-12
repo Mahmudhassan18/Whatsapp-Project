@@ -1,15 +1,21 @@
 var usersObj = [
     {
-        username: "html",
-        passwrod: "html"
+        username: "Harry Potter",
+        nickname: "Harry",
+        password: "Wizard1",
+        pfp: "images/Harry_Potter.jpg"
     },
     {
-        username: "html1",
-        passwrod: "html1"
+        username: "Luke Skywalker",
+        nickname: "Luke",
+        password: "Jedi2",
+        pfp: "images/Luke_Skywalker.png"
     },
     {
-        username: "html2",
-        passwrod: "html2"
+        username: "Marty McFly",
+        nickname: "Marty",
+        password: "TimeTraveler3",
+        pfp: "images/Marty_McFly.jpg"
     }
 ]
 
@@ -17,17 +23,75 @@ var usersObj = [
 
 
 function logIn(){
-    var username = document.getElementById("inputUsername").value
-    var password = document.getElementById("inputPassword").value
-    var found = 0;
-    for(i=0; i < usersObj.length; i++){
-        if(username == usersObj[i].username && password == usersObj[i].passwrod){
-            var found = 1;
+    var username = document.getElementById("inputUsername").value;
+    var password = document.getElementById("inputPassword").value;
+    var amountOfUsers = usersObj.length;
+    for(i=0; i < amountOfUsers; i++){
+        if(username == usersObj[i].username && password == usersObj[i].password){
             window.location.href="chat.html";
+            return;
         }
     }
-    if(!found){
-        alert("Wrong username or password")
+    alert("Wrong username or password");
+}
+
+
+function signUp () {
+    var inputUsername = document.getElementById("inputUsername").value;
+    var inputNickname = document.getElementById("inputNickname").value;
+    var inputPassword = document.getElementById("inputPassword").value;
+    var passwordVerfication = document.getElementById("verifyPassword").value;
+    var inputPfp = document.getElementById("inputPfp");
+
+    if (inputUsername == "" || inputNickname == "" || inputPassword == "" || passwordVerfication == "" || inputPfp == null) {
+        alert("You must fill all fields");
+        return;
+    }
+    inputPfp = "images/" + inputPfp.files[0].name;
+
+    var amountOfUsers = usersObj.length;
+    for(i=0; i < amountOfUsers; i++){
+        if(inputUsername == usersObj[i].username){
+            alert("There already exists a user with this username");
+            return;
+        }
     }
 
+    var passwordLen = inputPassword.length;
+    var isThereADigit = false;
+    var isThereAnUppercaseLetter = false;
+    var isThereALowercaseLetter = false;
+
+    for(i=0; i < passwordLen; i++) {
+        if ('0' <= inputPassword[i] && inputPassword[i] <= '9') {
+            isThereADigit = true;
+        }
+        if ('A' <= inputPassword[i] && inputPassword[i] <= 'Z') {
+            isThereAnUppercaseLetter = true;
+        }
+        if ('a' <= inputPassword[i] && inputPassword[i] <= 'z') {
+            isThereALowercaseLetter = true;
+        }
+    }
+
+    if (!isThereADigit || !isThereAnUppercaseLetter || !isThereALowercaseLetter) {
+        alert("A password must contain at least 1 digit, 1 uppercase letter and 1 lowercase letter");
+        return;
+    }
+
+    if(inputPassword != passwordVerfication){
+        alert("The password verification does not match");
+        return;
+    }
+
+    usersObj.push({
+        username: inputUsername,
+        nickname: inputNickname,
+        password: inputPassword,
+        pfp: inputPfp
+    });
+
+    for(i=0; i < amountOfUsers + 1; i++) {
+        console.log(usersObj[i]);
+    }
 }
