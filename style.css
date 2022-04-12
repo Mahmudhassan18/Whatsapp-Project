@@ -5,6 +5,7 @@ html{
 }
 
 body {
+    overflow-y: hidden;
     height: 100%;
     margin: 0;
     background-color: lightgrey;
@@ -144,6 +145,7 @@ body {
 .chatListCol{
     overflow: auto;
     height: 80vh;
+    background-color: white;
 }
 
 .file-attach{
