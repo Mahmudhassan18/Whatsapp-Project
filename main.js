@@ -16,29 +16,62 @@ var usersObj = [
         nickname: "Marty",
         password: "TimeTraveler3",
         pfp: "images/Marty_McFly.jpg"
-    },
-    {
-        username: "user1",
-        nickname: "Default user",
-        password: "User1",
-        pfp: "images/defaultProfile.jpeg"
     }
 ]
 
+const MAX_LATEST_MESSAGE_LENGTH = 60;
+
 var messagesMap = new Map();
 var sendTo = null;
-var user = null;
+var loggedUser = null;
+var areSendMessageTabContentsEnabled = false;
+
+var addedContacts = new Set();
+
+messagesMap.set("HarryPotter:LukeSkywalker", [["HarryPotter", "I'm a wizard"], ["LukeSkywalker", "I'm a jedi"]]);
+messagesMap.set("HarryPotter:MartyMcFly", [["MartyMcFly", "I'm a time traveler"], ["HarryPotter", "I also time traveled in my third book"]]);
+messagesMap.set("LukeSkywalker:MartyMcFly", [["MartyMcFly", "Did you ever hear the tragedy of Darth Plagueis The Wise?"],
+    ["LukeSkywalker", "Yup..."]]);
+
+
+var loginBox = document.getElementById("login");
+var signupBox = document.getElementById("signUp");
+var chatBox = document.getElementById("chat");
+
+var inputUsername_login = document.getElementById("inputUsername-login");
+var inputPassword_login = document.getElementById("inputPassword-login");
+var inputUsername_signup = document.getElementById("inputUsername-signup");
+var inputNickname = document.getElementById("inputNickname");
+var inputPassword_signup = document.getElementById("inputPassword-signup");
+var passwordVerfication = document.getElementById("verifyPassword");
+var inputPfp = document.getElementById("inputPfp");
+
+var userInfo = document.getElementById("user-info");
+var inputContact = document.getElementById("inputContact");
+var chatList = document.getElementById("chatList");
+var close_add_contact = document.getElementById("close-add-contact");
+var sentChat = document.getElementById("sentChat");
+
+var paperclipButton = document.getElementById("paperclipButton");
+var microphoneButton = document.getElementById("microphoneButton");
+var message_to_send = document.getElementById("message-to-send");
+var button_addon2 = document.getElementById("button-addon2");
+
+paperclipButton.disabled = true;
+microphoneButton.disabled = true;
+message_to_send.disabled = true;
+button_addon2.disabled = true;
 
 
 
 function logIn() {
-    let username = document.getElementById("inputUsername").value;
-    let password = document.getElementById("inputPassword").value;
+    let inputUsername_login_val = inputUsername_login.value;
+    let inputPassword_login_val = inputPassword_login.value;
     let amountOfUsers = usersObj.length;
     for (i = 0; i < amountOfUsers; i++) {
-        if (username == usersObj[i].username && password == usersObj[i].password) {
+        if (inputUsername_login_val == usersObj[i].username && inputPassword_login_val == usersObj[i].password) {
             showChat();
-            getChat(usersObj[i].nickname, usersObj[i].pfp)
+            getChat(usersObj[i].nickname, usersObj[i].pfp, inputUsername_login_val);
             return;
         }
     }
@@ -47,39 +80,39 @@ function logIn() {
 
 
 function signUp() {
-    let inputUsername = document.getElementById("inputUsername").value;
-    let inputNickname = document.getElementById("inputNickname").value;
-    let inputPassword = document.getElementById("inputPassword").value;
-    let passwordVerfication = document.getElementById("verifyPassword").value;
-    let inputPfp = document.getElementById("inputPfp").value;
+    var inputUsername_signup_val = inputUsername_signup.value;
+    var inputNickname_val = inputNickname.value;
+    var inputPassword_signup_val = inputPassword_signup.value;
+    var passwordVerfication_val = passwordVerfication.value;
+    var inputPfp_val = inputPfp.value;
 
-    if (inputUsername == "" || inputNickname == "" || inputPassword == "" || passwordVerfication == "" || inputPfp == "") {
+    if (inputUsername_signup_val == "" || inputNickname_val == "" || inputPassword_signup_val == "" || passwordVerfication_val == "" || inputPfp_val == "") {
         alert("You must fill all fields");
         return;
     }
-    inputPfp = "images/" + inputPfp.replace("C:\\fakepath\\", "");
+    inputPfp_val = "images/" + inputPfp_val.replace("C:\\fakepath\\", "");
 
     let amountOfUsers = usersObj.length;
     for (i = 0; i < amountOfUsers; i++) {
-        if (inputUsername == usersObj[i].username) {
+        if (inputUsername_signup_val == usersObj[i].username) {
             alert("There already exists a user with this username");
             return;
         }
     }
 
-    let passwordLen = inputPassword.length;
+    let passwordLen = inputPassword_signup_val.length;
     let isThereADigit = false;
     let isThereAnUppercaseLetter = false;
     let isThereALowercaseLetter = false;
 
     for (i = 0; i < passwordLen; i++) {
-        if ('0' <= inputPassword[i] && inputPassword[i] <= '9') {
+        if ('0' <= inputPassword_signup_val[i] && inputPassword_signup_val[i] <= '9') {
             isThereADigit = true;
         }
-        if ('A' <= inputPassword[i] && inputPassword[i] <= 'Z') {
+        if ('A' <= inputPassword_signup_val[i] && inputPassword_signup_val[i] <= 'Z') {
             isThereAnUppercaseLetter = true;
         }
-        if ('a' <= inputPassword[i] && inputPassword[i] <= 'z') {
+        if ('a' <= inputPassword_signup_val[i] && inputPassword_signup_val[i] <= 'z') {
             isThereALowercaseLetter = true;
         }
     }
@@ -89,16 +122,16 @@ function signUp() {
         return;
     }
 
-    if (inputPassword != passwordVerfication) {
+    if (inputPassword_signup_val != passwordVerfication_val) {
         alert("The password verification does not match");
         return;
     }
 
     usersObj.push({
-        username: inputUsername,
-        nickname: inputNickname,
-        password: inputPassword,
-        pfp: inputPfp
+        username: inputUsername_signup_val,
+        nickname: inputNickname_val,
+        password: inputPassword_signup_val,
+        pfp: inputPfp_val
     });
 
     hideSignup();
@@ -107,33 +140,26 @@ function signUp() {
 
 
 function sendmessage() {
-    let message = document.getElementById("message-to-send").value;
+    let message = message_to_send.value;
     if (message != '') {
         addMessageToMessagesMap(message);
-        writeMessageInDocument(message);
+        writeMessageInDocument(message, true);
+        updateLatestMessage(message, sendTo);
     }
 }
 
 function addMessageToMessagesMap(message) {
-    let cmp = user.localeCompare(sendTo);
-    let key = null;
-    if (cmp == -1) {
-        key = user + ":" + sendTo;
-    } else {
-        key = sendTo + ":" + user;
-    }
+    let key = getKeyOfTwoUsernames(loggedUser, sendTo);
 
     if (messagesMap.has(key)) {
         messagesList = messagesMap.get(key);
-        messagesList.push([user, message]);
+        messagesList.push([loggedUser, message]);
     } else {
-        messagesMap.set(key, [[user, message]]);
+        messagesMap.set(key, [[loggedUser, message]]);
     }
 }
 
-function writeMessageInDocument(message) {
-    let element = document.getElementById("sentChat");
-
+function writeMessageInDocument(message, wasSentByLoggedUser) {
     let rowDiv = document.createElement("div");
     let colDiv = document.createElement("div");
     let spanD = document.createElement("span");
@@ -142,22 +168,73 @@ function writeMessageInDocument(message) {
 
     rowDiv.className = "row";
     colDiv.className = "col";
-    spanD.className = "usersSpeechBubble";
+    if (wasSentByLoggedUser) {
+        spanD.className = "usersSpeechBubble";
+    } else {
+        spanD.className = "othersSpeechBubble";
+    }
 
     spanD.appendChild(messageText);
     colDiv.appendChild(spanD);
     rowDiv.appendChild(colDiv);
     sentChat.appendChild(rowDiv);
 
-    document.getElementById("message-to-send").value = "";
-    element.scrollTop = element.scrollHeight;
+    message_to_send.value = "";
+    sentChat.scrollTop = sentChat.scrollHeight;
+}
+
+function loadContactMessages(contactUsername) {
+    if (!areSendMessageTabContentsEnabled) {
+        enableSendMessageTabContents();
+        areSendMessageTabContentsEnabled = true;
+    }
+
+    sendTo = contactUsername;
+    let key = getKeyOfTwoUsernames(loggedUser, sendTo);
+
+    sentChat.innerHTML = "";
+
+    if (messagesMap.has(key)) {
+        messagesList = messagesMap.get(key);
+        let amountOfMessages = messagesList.length;
+        
+        for (i = 0; i < amountOfMessages; i++) {
+            if (loggedUser == messagesList[i][0]) {
+                writeMessageInDocument(messagesList[i][1], true);
+            } else {
+                writeMessageInDocument(messagesList[i][1], false);
+            }
+        }
+    }
+}
+
+function getKeyOfTwoUsernames(user1, user2) {
+    let cmp = user1.localeCompare(user2);
+    let key = null;
+    if (cmp == -1) {
+        key = user1 + ":" + user2;
+    } else {
+        key = user2 + ":" + user1;
+    }
+    return key;
+}
+
+function enableSendMessageTabContents() {
+    paperclipButton.disabled = false;
+    microphoneButton.disabled = false;
+    message_to_send.disabled = false;
+    button_addon2.disabled = false;
+}
+
+function updateLatestMessage(newMessage, contactUsername) {
+    document.getElementById(contactUsername + "-latestMessage").textContent = cutLongString(newMessage, MAX_LATEST_MESSAGE_LENGTH);
 }
 
 
 
 function addContact() {
-    let inputContact = document.getElementById("inputContact").value;
-    if (inputContact == "") {
+    let inputContact_val = inputContact.value;
+    if (inputContact_val == "") {
         alert("You must fill the contact's username field");
         return;
     }
@@ -165,7 +242,7 @@ function addContact() {
     let contact = null;
     let amountOfUsers = usersObj.length;
     for(i=0; i < amountOfUsers; i++){
-        if(inputContact == usersObj[i].username){
+        if(inputContact_val == usersObj[i].username){
             contact = usersObj[i];
             break;
         }
@@ -175,22 +252,48 @@ function addContact() {
         return;
     }
 
-    let chatList = document.getElementById("chatList");
-    chatList.innerHTML += "<li class=\"list-group-item d-flex justify-content-between align-items-start\">\
+    if (contact.username == loggedUser) {
+        alert("You cannot add yourself as a contact");
+        return;
+    }
+
+    if (addedContacts.has(contact.username)) {
+        alert("This contact has already been added")
+        return;
+    }
+    addedContacts.add(contact.username);
+
+    chatList.innerHTML += "<li class=\"list-group-item d-flex justify-content-between align-items-start\"\
+                                onclick=\"loadContactMessages(\'" + contact.username + "\')\">\
                             <img src=\"" + contact.pfp + "\" alt=\"Avatar\" class=\"contact-profile\">\
                             <div class=\"ms-2 me-auto\">\
                                 <div class=\"fw-bold\">" + contact.nickname + "</div>\
-                                Latest Message\
+                                <div id=\"" + contact.username + "-latestMessage\">" + getLatestMessage(loggedUser, contact.username) + "</div>\
                             </div>\
-                            <span class=\"badge bg-primary rounded-pill\">14</span>\
                         </li>";
-    document.getElementById("close-add-contact").click();
-    
+    close_add_contact.click();
 }
 
-var loginBox = document.getElementById("login");
-var signupBox = document.getElementById("signUp");
-var chatBox = document.getElementById("chat");
+function getLatestMessage(user1, user2) {
+    let key = getKeyOfTwoUsernames(user1, user2);
+    if (messagesMap.has(key)) {
+        messagesList = messagesMap.get(key);
+        let amountOfMessages = messagesList.length;
+        return cutLongString(messagesList[amountOfMessages - 1][1], MAX_LATEST_MESSAGE_LENGTH);
+    } else {
+        return "";
+    }
+}
+
+function cutLongString(text, maxLength) {
+    if (text.length > maxLength) {
+        return text.substring(0, maxLength - 3) + "...";
+    } else {
+        return text;
+    }
+}
+
+
 
 function hideLogin() {
     event.preventDefault();
@@ -211,8 +314,9 @@ function showChat() {
     chatBox.style.visibility = "visible";
 }
 
-function getChat(nickname, picture) {
-    var userInfo = document.getElementById("user-info");
+function getChat(nickname, picture, username) {
+    loggedUser = username;
+
     userInfo.innerHTML = ""
     console.log(picture);
 
