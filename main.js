@@ -19,11 +19,16 @@ var usersObj = [
     }
 ]
 
+var messagesMap = new Map();
+var sendTo = null;
+var user = null;
+
+
 
 function logIn() {
-    var username = document.getElementById("inputUsername").value;
-    var password = document.getElementById("inputPassword").value;
-    var amountOfUsers = usersObj.length;
+    let username = document.getElementById("inputUsername").value;
+    let password = document.getElementById("inputPassword").value;
+    let amountOfUsers = usersObj.length;
     for (i = 0; i < amountOfUsers; i++) {
         if (username == usersObj[i].username && password == usersObj[i].password) {
             window.location.href = "chat.html";
@@ -35,11 +40,11 @@ function logIn() {
 
 
 function signUp() {
-    var inputUsername = document.getElementById("inputUsername").value;
-    var inputNickname = document.getElementById("inputNickname").value;
-    var inputPassword = document.getElementById("inputPassword").value;
-    var passwordVerfication = document.getElementById("verifyPassword").value;
-    var inputPfp = document.getElementById("inputPfp").value;
+    let inputUsername = document.getElementById("inputUsername").value;
+    let inputNickname = document.getElementById("inputNickname").value;
+    let inputPassword = document.getElementById("inputPassword").value;
+    let passwordVerfication = document.getElementById("verifyPassword").value;
+    let inputPfp = document.getElementById("inputPfp").value;
 
     if (inputUsername == "" || inputNickname == "" || inputPassword == "" || passwordVerfication == "" || inputPfp == "") {
         alert("You must fill all fields");
@@ -47,7 +52,7 @@ function signUp() {
     }
     inputPfp = "images/" + inputPfp.replace("C:\\fakepath\\", "");
 
-    var amountOfUsers = usersObj.length;
+    let amountOfUsers = usersObj.length;
     for (i = 0; i < amountOfUsers; i++) {
         if (inputUsername == usersObj[i].username) {
             alert("There already exists a user with this username");
@@ -55,10 +60,10 @@ function signUp() {
         }
     }
 
-    var passwordLen = inputPassword.length;
-    var isThereADigit = false;
-    var isThereAnUppercaseLetter = false;
-    var isThereALowercaseLetter = false;
+    let passwordLen = inputPassword.length;
+    let isThereADigit = false;
+    let isThereAnUppercaseLetter = false;
+    let isThereALowercaseLetter = false;
 
     for (i = 0; i < passwordLen; i++) {
         if ('0' <= inputPassword[i] && inputPassword[i] <= '9') {
@@ -92,40 +97,66 @@ function signUp() {
     window.location.href = "login.html";
 }
 
+
+
 function sendmessage() {
-    var message = document.getElementById("message-to-send").value;
+    let message = document.getElementById("message-to-send").value;
     if (message != '') {
-        var element = document.getElementById("sentChat");
-
-        var rowDiv = document.createElement("div");
-        var colDiv = document.createElement("div");
-        var spanD = document.createElement("span");
-
-        var message = document.createTextNode(message);
-
-        rowDiv.className = "row";
-        colDiv.className = "col";
-        spanD.className = "usersSpeechBubble";
-
-        spanD.appendChild(message);
-        colDiv.appendChild(spanD);
-        rowDiv.appendChild(colDiv);
-        sentChat.appendChild(rowDiv);
-
-        document.getElementById("message-to-send").value = "";
-        element.scrollTop = element.scrollHeight;
+        addMessageToMessagesMap(message);
+        writeMessageInDocument(message);
     }
 }
 
+function addMessageToMessagesMap(message) {
+    let cmp = user.localeCompare(sendTo);
+    let key = null;
+    if (cmp == -1) {
+        key = user + ":" + sendTo;
+    } else {
+        key = sendTo + ":" + user;
+    }
+
+    if (messagesMap.has(key)) {
+        messagesList = messagesMap.get(key);
+        messagesList.push([user, message]);
+    } else {
+        messagesMap.set(key, [[user, message]]);
+    }
+}
+
+function writeMessageInDocument(message) {
+    let element = document.getElementById("sentChat");
+
+    let rowDiv = document.createElement("div");
+    let colDiv = document.createElement("div");
+    let spanD = document.createElement("span");
+
+    let messageText = document.createTextNode(message);
+
+    rowDiv.className = "row";
+    colDiv.className = "col";
+    spanD.className = "usersSpeechBubble";
+
+    spanD.appendChild(messageText);
+    colDiv.appendChild(spanD);
+    rowDiv.appendChild(colDiv);
+    sentChat.appendChild(rowDiv);
+
+    document.getElementById("message-to-send").value = "";
+    element.scrollTop = element.scrollHeight;
+}
+
+
+
 function addContact() {
-    var inputContact = document.getElementById("inputContact").value;
+    let inputContact = document.getElementById("inputContact").value;
     if (inputContact == "") {
         alert("You must fill the contact's username field");
         return;
     }
 
-    var contact = null;
-    var amountOfUsers = usersObj.length;
+    let contact = null;
+    let amountOfUsers = usersObj.length;
     for(i=0; i < amountOfUsers; i++){
         if(inputContact == usersObj[i].username){
             contact = usersObj[i];
@@ -137,7 +168,7 @@ function addContact() {
         return;
     }
 
-    var chatList = document.getElementById("chatList");
+    let chatList = document.getElementById("chatList");
     chatList.innerHTML += "<li class=\"list-group-item d-flex justify-content-between align-items-start\">\
                             <img src=\"" + contact.pfp + "\" alt=\"Avatar\" style=\"width:60px\">\
                             <div class=\"ms-2 me-auto\">\
