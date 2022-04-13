@@ -1,18 +1,18 @@
 var usersObj = [
     {
-        username: "Harry Potter",
+        username: "HarryPotter",
         nickname: "Harry",
         password: "Wizard1",
-        pfp: "images/Harry_Potter.jpg"
+        pfp: "images/Harry_Potter.jpg",
     },
     {
-        username: "Luke Skywalker",
+        username: "LukeSkywalker",
         nickname: "Luke",
         password: "Jedi2",
         pfp: "images/Luke_Skywalker.png"
     },
     {
-        username: "Marty McFly",
+        username: "MartyMcFly",
         nickname: "Marty",
         password: "TimeTraveler3",
         pfp: "images/Marty_McFly.jpg"
