@@ -184,84 +184,80 @@
                     </div>
                     <div class="sendMessageTab">
                         <div class="row">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-auto file-attach">
-                                        <!-- Button trigger modal -->
-                                        <button type="button" class="btn" data-bs-toggle="modal" id="paperclipButton"
-                                            data-bs-target="#paperclipModal">
-                                            <h3>
-                                                <i class="bi bi-paperclip"></i>
-                                            </h3>
-                                        </button>
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="paperclipModal" tabindex="-1"
-                                            aria-labelledby="paperclipModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="paperclipModalLabel">Upload File
-                                                        </h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="input-group mb-3">
-                                                            <input type="file" class="form-control" id="inputFile">
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close</button>
-                                                        <button type="button" class="btn btn-primary">Save
-                                                            changes</button>
-                                                    </div>
+                            <div class="col-auto file-attach">
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn" data-bs-toggle="modal" id="paperclipButton"
+                                    data-bs-target="#paperclipModal">
+                                    <h3>
+                                        <i class="bi bi-paperclip"></i>
+                                    </h3>
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="paperclipModal" tabindex="-1"
+                                    aria-labelledby="paperclipModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="paperclipModalLabel">Upload File
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="input-group mb-3">
+                                                    <input type="file" class="form-control" id="inputFile">
                                                 </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary">Save
+                                                    changes</button>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-auto micro">
-                                        <!-- Button trigger modal -->
-                                        <button type="button" class="btn" data-bs-toggle="modal" id="microphoneButton"
-                                            data-bs-target="#microphoneModal">
-                                            <h3>
-                                                <i class="bi bi-mic-fill"></i>
-                                            </h3>
-                                        </button>
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="microphoneModal" tabindex="-1"
-                                            aria-labelledby="microphoneModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="microphoneModalLabel">Record</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="input-group mb-3">
-                                                            <input type="file" accept=".mp3, audio/*" class="form-control" id="inputAudio">
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close</button>
-                                                        <button type="button" class="btn btn-primary">Save
-                                                            changes</button>
-                                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-auto micro">
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn" data-bs-toggle="modal" id="microphoneButton"
+                                    data-bs-target="#microphoneModal">
+                                    <h3>
+                                        <i class="bi bi-mic-fill"></i>
+                                    </h3>
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="microphoneModal" tabindex="-1"
+                                    aria-labelledby="microphoneModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="microphoneModalLabel">Record</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="input-group mb-3">
+                                                    <input type="file" accept=".mp3, audio/*" class="form-control" id="inputAudio">
                                                 </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary">Save
+                                                    changes</button>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="input-group mb-3 send-message">
-                                            <input type="text" class="form-control" id="message-to-send"
-                                                placeholder="Type a message..." aria-label="Recipient's username"
-                                                aria-describedby="button-addon2">
-                                            <button class="btn btn-outline-secondary" onclick="sendmessage()"
-                                                type="button" id="button-addon2">Send</button>
-                                        </div>
-                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-group mb-3 send-message">
+                                    <input type="text" class="form-control" id="message-to-send"
+                                        placeholder="Type a message..." aria-label="Recipient's username"
+                                        aria-describedby="button-addon2">
+                                    <button class="btn btn-outline-secondary" onclick="sendmessage()"
+                                        type="button" id="button-addon2">Send</button>
                                 </div>
                             </div>
                         </div>

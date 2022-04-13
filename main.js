@@ -90,7 +90,11 @@ function signUp() {
         alert("You must fill all fields");
         return;
     }
-    inputPfp_val = "images/" + inputPfp_val.replace("C:\\fakepath\\", "");
+
+    if (inputUsername_signup_val.includes(":")) {
+        alert("The username cannot include a ':' character");
+        return;
+    }
 
     let amountOfUsers = usersObj.length;
     for (i = 0; i < amountOfUsers; i++) {
@@ -126,6 +130,8 @@ function signUp() {
         alert("The password verification does not match");
         return;
     }
+
+    inputPfp_val = "images/" + inputPfp_val.replace("C:\\fakepath\\", "");
 
     usersObj.push({
         username: inputUsername_signup_val,
