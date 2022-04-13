@@ -16,6 +16,12 @@ var usersObj = [
         nickname: "Marty",
         password: "TimeTraveler3",
         pfp: "images/Marty_McFly.jpg"
+    },
+    {
+        username: "user1",
+        nickname: "Default user",
+        password: "User1",
+        pfp: "images/defaultProfile.jpeg"
     }
 ]
 
@@ -31,7 +37,8 @@ function logIn() {
     let amountOfUsers = usersObj.length;
     for (i = 0; i < amountOfUsers; i++) {
         if (username == usersObj[i].username && password == usersObj[i].password) {
-            window.location.href = "chat.html";
+            showChat();
+            getChat(usersObj[i].nickname, usersObj[i].pfp)
             return;
         }
     }
@@ -94,7 +101,7 @@ function signUp() {
         pfp: inputPfp
     });
 
-    window.location.href = "login.html";
+    hideSignup();
 }
 
 
@@ -170,11 +177,52 @@ function addContact() {
 
     let chatList = document.getElementById("chatList");
     chatList.innerHTML += "<li class=\"list-group-item d-flex justify-content-between align-items-start\">\
-                            <img src=\"" + contact.pfp + "\" alt=\"Avatar\" style=\"width:60px\">\
+                            <img src=\"" + contact.pfp + "\" alt=\"Avatar\" class=\"contact-profile\">\
                             <div class=\"ms-2 me-auto\">\
                                 <div class=\"fw-bold\">" + contact.nickname + "</div>\
                                 Latest Message\
                             </div>\
                             <span class=\"badge bg-primary rounded-pill\">14</span>\
                         </li>";
+    document.getElementById("close-add-contact").click();
+    
+}
+
+var loginBox = document.getElementById("login");
+var signupBox = document.getElementById("signUp");
+var chatBox = document.getElementById("chat");
+
+function hideLogin() {
+    event.preventDefault();
+    signupBox.style.visibility = "visible";
+    loginBox.style.visibility = "hidden";
+}
+
+function hideSignup() {
+    event.preventDefault();
+    signupBox.style.visibility = "hidden";
+    loginBox.style.visibility = "visible";
+}
+
+function showChat() {
+    event.preventDefault();
+    signupBox.style.visibility = "hidden";
+    loginBox.style.visibility = "hidden";
+    chatBox.style.visibility = "visible";
+}
+
+function getChat(nickname, picture) {
+    var userInfo = document.getElementById("user-info");
+    userInfo.innerHTML = ""
+    console.log(picture);
+
+    var userImg = document.createElement("img");
+    userImg.src = picture;
+    userImg.style.width = "60px";
+    userImg.style.borderRadius = "50%";
+    userImg.style.paddingRight = "5px";
+    var nickname = document.createTextNode(nickname);
+
+    userInfo.appendChild(userImg);
+    userInfo.appendChild(nickname);
 }
