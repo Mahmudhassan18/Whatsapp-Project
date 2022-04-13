@@ -161,4 +161,29 @@ body {
     padding-right: 5px;
 }
 
+#login{
+    visibility: visible;
+}
 
+#signUp{
+    visibility: hidden;
+}
+
+#chat{
+    visibility: hidden;
+}
+
+
+.click-here{
+    background-color: transparent;
+    color: green;
+    text-decoration: underline;
+    border: 0;
+    padding: 0;
+}
+
+.contact-profile{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
