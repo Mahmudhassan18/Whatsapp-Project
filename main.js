@@ -31,7 +31,7 @@ var addedContacts = new Set();
 messagesMap.set("HarryPotter:LukeSkywalker", [["HarryPotter", "I'm a wizard"], ["LukeSkywalker", "I'm a jedi"]]);
 messagesMap.set("HarryPotter:MartyMcFly", [["MartyMcFly", "I'm a time traveler"], ["HarryPotter", "I also time traveled in my third book"]]);
 messagesMap.set("LukeSkywalker:MartyMcFly", [["MartyMcFly", "Did you ever hear the tragedy of Darth Plagueis The Wise?"],
-    ["LukeSkywalker", "Yup..."]]);
+["LukeSkywalker", "Yup..."]]);
 
 
 var loginBox = document.getElementById("login");
@@ -203,7 +203,7 @@ function loadContactMessages(contactUsername) {
     if (messagesMap.has(key)) {
         messagesList = messagesMap.get(key);
         let amountOfMessages = messagesList.length;
-        
+
         for (i = 0; i < amountOfMessages; i++) {
             if (loggedUser == messagesList[i][0]) {
                 writeMessageInDocument(messagesList[i][1], true);
@@ -236,7 +236,20 @@ function updateLatestMessage(newMessage, contactUsername) {
     document.getElementById(contactUsername + "-latestMessage").textContent = cutLongString(newMessage, MAX_LATEST_MESSAGE_LENGTH);
 }
 
+function loadContactInChat(nickname, profile) {
+    let colDiv = document.createElement("div");
+    let userImg = document.createElement("img");
+    let userNickname = document.createTextNode(nickname);
+    userImg.src = profile;
+    colDiv.setAttribute("class","col", "user"); ;
+    userImg.className = "contact-profile";
 
+    contactInChat.innerHTML = "";
+
+    colDiv.appendChild(userImg);
+    colDiv.appendChild(userNickname);
+    contactInChat.appendChild(colDiv);
+}
 
 function addContact() {
     let inputContact_val = inputContact.value;
@@ -247,8 +260,8 @@ function addContact() {
 
     let contact = null;
     let amountOfUsers = usersObj.length;
-    for(i=0; i < amountOfUsers; i++){
-        if(inputContact_val == usersObj[i].username){
+    for (i = 0; i < amountOfUsers; i++) {
+        if (inputContact_val == usersObj[i].username) {
             contact = usersObj[i];
             break;
         }
@@ -270,7 +283,7 @@ function addContact() {
     addedContacts.add(contact.username);
 
     chatList.innerHTML += "<li class=\"list-group-item d-flex justify-content-between align-items-start\"\
-                                onclick=\"loadContactMessages(\'" + contact.username + "\')\">\
+                                onclick=\"loadContactMessages(\'" + contact.username + "\');loadContactInChat(\'" + contact.nickname + "\',\'" + contact.pfp + "\');\">\
                             <img src=\"" + contact.pfp + "\" alt=\"Avatar\" class=\"contact-profile\">\
                             <div class=\"ms-2 me-auto\">\
                                 <div class=\"fw-bold\">" + contact.nickname + "</div>\
