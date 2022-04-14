@@ -51,6 +51,7 @@ var inputContact = document.getElementById("inputContact");
 var chatList = document.getElementById("chatList");
 var close_add_contact = document.getElementById("close-add-contact");
 var sentChat = document.getElementById("sentChat");
+var file = document.getElementById("inputFile");
 
 var paperclipButton = document.getElementById("paperclipButton");
 var microphoneButton = document.getElementById("microphoneButton");
@@ -61,7 +62,6 @@ paperclipButton.disabled = true;
 microphoneButton.disabled = true;
 message_to_send.disabled = true;
 button_addon2.disabled = true;
-
 
 
 function logIn() {
@@ -77,7 +77,6 @@ function logIn() {
     }
     alert("Wrong username or password");
 }
-
 
 function signUp() {
     var inputUsername_signup_val = inputUsername_signup.value;
@@ -142,8 +141,6 @@ function signUp() {
 
     hideSignup();
 }
-
-
 
 function sendmessage() {
     let message = message_to_send.value;
@@ -241,7 +238,7 @@ function loadContactInChat(nickname, profile) {
     let userImg = document.createElement("img");
     let userNickname = document.createTextNode(nickname);
     userImg.src = profile;
-    colDiv.setAttribute("class","col", "user"); ;
+    colDiv.setAttribute("class", "col", "user");;
     userImg.className = "contact-profile";
 
     contactInChat.innerHTML = "";
@@ -252,6 +249,8 @@ function loadContactInChat(nickname, profile) {
 }
 
 function addContact() {
+    let val = false;
+
     let inputContact_val = inputContact.value;
     if (inputContact_val == "") {
         alert("You must fill the contact's username field");
@@ -282,6 +281,11 @@ function addContact() {
     }
     addedContacts.add(contact.username);
 
+    if (!val) {
+        chatList.innerHTML = "";
+        val = true;
+    }
+
     chatList.innerHTML += "<li class=\"list-group-item d-flex justify-content-between align-items-start\"\
                                 onclick=\"loadContactMessages(\'" + contact.username + "\');loadContactInChat(\'" + contact.nickname + "\',\'" + contact.pfp + "\');\">\
                             <img src=\"" + contact.pfp + "\" alt=\"Avatar\" class=\"contact-profile\">\
@@ -311,8 +315,6 @@ function cutLongString(text, maxLength) {
         return text;
     }
 }
-
-
 
 function hideLogin() {
     event.preventDefault();
@@ -349,3 +351,111 @@ function getChat(nickname, picture, username) {
     userInfo.appendChild(userImg);
     userInfo.appendChild(nickname);
 }
+
+function getExtension(filename) {
+    var parts = filename.split('.');
+    return parts[parts.length - 1];
+}
+
+function isImage(filename) {
+    var ext = getExtension(filename);
+    switch (ext.toLowerCase()) {
+        case 'jpg':
+        case 'jpeg':
+        case 'gif':
+        case 'bmp':
+        case 'png':
+            //etc
+            return true;
+    }
+    return false;
+}
+
+function isVideo(filename) {
+    var ext = getExtension(filename);
+    switch (ext.toLowerCase()) {
+        case 'm4v':
+        case 'avi':
+        case 'mpg':
+        case 'mp4':
+            // etc
+            return true;
+    }
+    return false;
+}
+
+var idIndex = 1
+function sendFile() {
+    let sentFile = file.files[0].name;
+    let filePath = "images\\" + sentFile;
+    console.log(filePath);
+    let modalId = "messagePic" + idIndex;
+    let input = ""
+    if (isImage(sentFile)) {
+        input = "<div class=\"row\">\
+    <div class=\"col\">\
+        <span class=\"usersSpeechBubble img-message\">\
+            <button type=\"button\" class=\"btn\" data-bs-toggle=\"modal\"\
+                data-bs-target=\"#"+ modalId + "\" \">\
+                <img src= \"" + filePath + "\" style=\"width: 200px;\">\
+            </button >\
+        </span >\
+        <div class=\"modal fade\" id=\"" + modalId + "\" tabindex=\"-1\" aria-labelledby=\"messagePicLabel\"\
+            aria-hidden=\"true\">\
+            <div class=\"modal-dialog\">\
+                <div class=\"modal-content\">\
+                    <div class=\"modal-header\">\
+                        <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"\
+                            aria-label=\"Close\"></button>\
+                    </div>\
+                    <div class=\"modal-body\">\
+                    <img src= \"" + filePath + "\" style=\"width: 100%;\">\
+                    </div>\
+                    <div class=\"modal-footer\">\
+                        <button type=\"button\" class=\"btn btn-secondary\"\
+                            data-bs-dismiss=\"modal\">Close</button>\
+                    </div>\
+                </div>\
+            </div>\
+        </div>\
+    </div>\
+</div>"} else if (isVideo(sentFile)) {
+        input = "<div class=\"row\">\
+    <div class=\"col\">\
+        <span class=\"usersSpeechBubble img-message\">\
+            <button type=\"button\" class=\"btn\" data-bs-toggle=\"modal\"\
+                data-bs-target=\"#"+ modalId + "\" \">\
+                <video width=\"320\" height=\"240\">\
+                   <source src=\""+ filePath + "\" type=\"video/mp4\">\
+                </video>\
+            </button>\
+        </span>\
+        <div class=\"modal fade\" id=\""+ modalId + "\" tabindex=\"-1\" aria-labelledby=\"messagePicLabel\"\
+            aria-hidden=\"true\">\
+            <div class=\"modal-dialog\">\
+                <div class=\"modal-content\">\
+                    <div class=\"modal-header\">\
+                        <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"\
+                            aria-label=\"Close\"></button>\
+                    </div>\
+                    <div class=\"modal-body\">\
+                        <video width=\"100%\"controls>\
+                   <source src=\""+ filePath + "\" type=\"video/mp4\">\
+                </video>\
+                    </div>\
+                    <div class=\"modal-footer\">\
+                        <button type=\"button\" class=\"btn btn-secondary\"\
+                            data-bs-dismiss=\"modal\">Close</button>\
+                    </div>\
+                </div>\
+            </div>\
+        </div>\
+    </div>\
+</div>"
+
+    }
+
+    idIndex += 1;
+    sentChat.innerHTML += input;
+}
+
