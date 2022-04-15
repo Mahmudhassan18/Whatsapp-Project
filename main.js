@@ -50,8 +50,11 @@ var userInfo = document.getElementById("user-info");
 var inputContact = document.getElementById("inputContact");
 var chatList = document.getElementById("chatList");
 var close_add_contact = document.getElementById("close-add-contact");
+var closeFileAttach = document.getElementById("close-file-attach");
+var closeAudioAttach = document.getElementById("close-audio-attach");
 var sentChat = document.getElementById("sentChat");
 var file = document.getElementById("inputFile");
+let audioFile = document.getElementById("inputAudio");
 
 var paperclipButton = document.getElementById("paperclipButton");
 var microphoneButton = document.getElementById("microphoneButton");
@@ -69,9 +72,9 @@ function logIn() {
     let inputPassword_login_val = inputPassword_login.value;
     let amountOfUsers = usersObj.length;
     for (i = 0; i < amountOfUsers; i++) {
-        if (inputUsername_login_val == usersObj[i].username && inputPassword_login_val == usersObj[i].password) {
+        if (inputUsername_login_val.toLowerCase() == usersObj[i].username.toLowerCase() && inputPassword_login_val == usersObj[i].password) {
             showChat();
-            getChat(usersObj[i].nickname, usersObj[i].pfp, inputUsername_login_val);
+            getChat(usersObj[i].nickname, usersObj[i].pfp, usersObj[i].username);
             return;
         }
     }
@@ -85,9 +88,13 @@ function signUp() {
     var passwordVerfication_val = passwordVerfication.value;
     var inputPfp_val = inputPfp.value;
 
-    if (inputUsername_signup_val == "" || inputNickname_val == "" || inputPassword_signup_val == "" || passwordVerfication_val == "" || inputPfp_val == "") {
+    if (inputUsername_signup_val == "" || inputNickname_val == "" || inputPassword_signup_val == "" || passwordVerfication_val == "") {
         alert("You must fill all fields");
         return;
+    }
+
+    if (inputPfp_val == ""){
+        inputPfp_val = "defaultProfile.jpeg"
     }
 
     if (inputUsername_signup_val.includes(":")) {
@@ -183,7 +190,7 @@ function writeMessageInDocument(message, wasSentByLoggedUser) {
     sentChat.appendChild(rowDiv);
 
     message_to_send.value = "";
-    sentChat.scrollTop = sentChat.scrollHeight;
+    scrollChat();
 }
 
 function loadContactMessages(contactUsername) {
@@ -260,7 +267,7 @@ function addContact() {
     let contact = null;
     let amountOfUsers = usersObj.length;
     for (i = 0; i < amountOfUsers; i++) {
-        if (inputContact_val == usersObj[i].username) {
+        if (inputContact_val.toLowerCase() == usersObj[i].username.toLowerCase()) {
             contact = usersObj[i];
             break;
         }
@@ -295,6 +302,8 @@ function addContact() {
                             </div>\
                         </li>";
     close_add_contact.click();
+    inputContact.value = "";
+
 }
 
 function getLatestMessage(user1, user2) {
@@ -339,7 +348,6 @@ function getChat(nickname, picture, username) {
     loggedUser = username;
 
     userInfo.innerHTML = ""
-    console.log(picture);
 
     var userImg = document.createElement("img");
     userImg.src = picture;
@@ -388,7 +396,6 @@ var idIndex = 1
 function sendFile() {
     let sentFile = file.files[0].name;
     let filePath = "images\\" + sentFile;
-    console.log(filePath);
     let modalId = "messagePic" + idIndex;
     let input = ""
     if (isImage(sentFile)) {
@@ -457,5 +464,29 @@ function sendFile() {
 
     idIndex += 1;
     sentChat.innerHTML += input;
+    file.value = "";
+    closeFileAttach.click();
+    scrollChat();
 }
 
+function sendAudio() {
+    let audio = audioFile.files[0].name;
+    let audioFilePath = "images\\" + audio;
+    let input = "<div class=\"row\">\
+    <div class=\"col\">\
+        <span class=\"usersSpeechBubble\">\
+            <audio controls>\
+                <source src=\""+ audioFilePath + "\" type=\"audio/mpeg\">\
+            </audio>\
+        </span>\
+    </div>\
+</div>"
+    sentChat.innerHTML += input;
+    closeAudioAttach.click();
+    audioFile.value = ""
+    scrollChat();
+}
+
+function scrollChat(){
+    sentChat.scrollTop = sentChat.scrollHeight;
+}

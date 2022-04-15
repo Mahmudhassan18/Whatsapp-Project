@@ -166,37 +166,8 @@
                             <div class="col">
                                 <span class="usersSpeechBubble img-message">
                                     <button type="button" class="btn" data-bs-toggle="modal"
-                                        data-bs-target="#messagePic1">
-                                        <img src="images\defaultProfile.jpeg" style="width: 60px;">
-                                    </button>
-                                </span>
-                                <!-- Modal -->
-                                <div class="modal fade" id="messagePic1" tabindex="-1" aria-labelledby="messagePicLabel"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <img src="images\defaultProfile.jpeg" style="width: 100%;">
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <span class="usersSpeechBubble img-message">
-                                    <button type="button" class="btn" data-bs-toggle="modal"
                                         data-bs-target="#messagePic2">
-                                        <img src="images\defaultProfile.jpeg" style="width: 200px;">
+                                        <img src="https://tinyurl.com/5n8chd8j" style="width: 200px;">
                                     </button>
                                 </span>
                                 <!-- Modal -->
@@ -209,7 +180,7 @@
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <img src="images\defaultProfile.jpeg" style="width: 100%;">
+                                                <img src="https://tinyurl.com/5n8chd8j" style="width: 100%;">
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
@@ -239,7 +210,7 @@
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="paperclipModalLabel">Upload File
                                                 </h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                <button type="button" id="close-file-attach" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
@@ -271,7 +242,7 @@
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="microphoneModalLabel">Record</h5>
+                                                <h5 class="modal-title" id="microphoneModalLabel">Upload Recording</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
@@ -282,10 +253,10 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
+                                                <button type="button" id="close-audio-attach" class="btn btn-secondary"
                                                     data-bs-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-primary">Save
-                                                    changes</button>
+                                                <button type="button" onclick="sendAudio()"
+                                                    class="btn btn-primary">Send</button>
                                             </div>
                                         </div>
                                     </div>
@@ -311,4 +282,5 @@
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
 </body>
+
 </html>
