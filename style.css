@@ -131,6 +131,7 @@ body {
     margin-right: 100px;
     float: left;
 }
+
 .list-group-item{
     border-bottom: 0.5;
 
@@ -147,12 +148,12 @@ body {
     background-color: white;
 }
 
-.file-attach{
+.most-left-attach-button{
     margin-left: 15px;
     padding: 0px;
 }
 
-.microphone{
+.attach-button{
     padding: 0px;
 }
 
@@ -178,8 +179,8 @@ body {
     background-color: transparent;
     color: green;
     text-decoration: underline;
-    border: 0;
-    padding: 0;
+    border: 0px;
+    padding: 0px;
 }
 
 .contact-profile{
