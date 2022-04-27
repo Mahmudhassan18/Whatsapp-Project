@@ -1,4 +1,4 @@
-var usersObj = [
+const usersObj = [
     {
         userId: 0,
         username: "HarryPotter",
@@ -22,95 +22,372 @@ var usersObj = [
     }
 ];
 
-const messageTypes = {
-    text : {
-        getCurrentInputValueOfThisMessageType: function() {return text_message_to_send.value;},
-        writeMessageInDocument: writeTextMessageInDocument,
-        generateLatestMessageText: function(message) {return cutLongString(message, MAX_LATEST_MESSAGE_LENGTH);}
-    },
-    image: {
-        getCurrentInputValueOfThisMessageType: function() {return URL.createObjectURL(messageInputImage.files[0]);},
-        writeMessageInDocument: writeImageMessageInDocument,
-        generateLatestMessageText: function(_message) {return "Image";}
-    },
-    video: {
-        getCurrentInputValueOfThisMessageType: function() {return URL.createObjectURL(messageInputVideo.files[0]);},
-        writeMessageInDocument: writeVideoMessageInDocument,
-        generateLatestMessageText: function(_message) {return "Video";}
-    },
-    audio: {
-        getCurrentInputValueOfThisMessageType: function() {return URL.createObjectURL(messageInputAudio.files[0]);},
-        writeMessageInDocument: writeAudioMessageInDocument,
-        generateLatestMessageText: function(_message) {return "Audio";}
-    }
-};
-
 const MAX_LATEST_MESSAGE_LENGTH = 60;
 
-var messagesMap = new Map();
+const messagesMap = new Map();
 var loggedUser = null;
 var sendTo = null;
 var messageKey = null;
 
 var areSendMessageTabContentsEnabled = false;
 
-var sentVideos = [];
+const sentVideos = [];
 var amountOfImagesInChat = 0;
 var amountOfVideosInChat = 0;
 
-var addedContacts = new Set();
+var messageInputAudioObjectURL = null;
+
+const addedContacts = new Set();
 var hasAContactBeenAdded = false;
+
+const latestMessageDivs = new Map();
+const latestMessageDateDivs = new Map();
 
 var amountOfUsers = 0;
 ////
 amountOfUsers += 3;
 ////
 
-messagesMap.set("0:1", [{senderId: 0, content: "I'm a wizard", typeOfMessage: messageTypes.text},
-    {senderId: 1, content: "I'm a jedi", typeOfMessage: messageTypes.text}]);
-messagesMap.set("0:2", [{senderId: 2, content: "I'm a time traveler", typeOfMessage: messageTypes.text},
-    {senderId: 0, content: "I also time traveled in my third book", typeOfMessage: messageTypes.text}]);
-messagesMap.set("1:2", [{senderId: 2, content: "Did you ever hear the tragedy of Darth Plagueis The Wise?", typeOfMessage: messageTypes.text},
-    {senderId: 1, content: "Yup...", typeOfMessage: messageTypes.text}]);
+const loginBox = document.getElementById("login");
+const signupBox = document.getElementById("signUp");
+const chatBox = document.getElementById("chat");
 
+const inputUsername_login = document.getElementById("inputUsername-login");
+const inputPassword_login = document.getElementById("inputPassword-login");
+const inputUsername_signup = document.getElementById("inputUsername-signup");
+const inputNickname = document.getElementById("inputNickname");
+const inputPassword_signup = document.getElementById("inputPassword-signup");
+const passwordVerfication = document.getElementById("verifyPassword");
+const inputPfp = document.getElementById("inputPfp");
 
-var loginBox = document.getElementById("login");
-var signupBox = document.getElementById("signUp");
-var chatBox = document.getElementById("chat");
+const userInfo = document.getElementById("user-info");
+const inputContact = document.getElementById("inputContact");
+const chatList = document.getElementById("chatList");
+const closeAddContact = document.getElementById("closeAddContact");
+const closeImageModalButton = document.getElementById("closeImageModalButton");
+const closeVideoModalButton = document.getElementById("closeVideoModalButton");
+const closeMicrophoneModalButton = document.getElementById("closeMicrophoneModalButton");
+const sentChat = document.getElementById("sentChat");
+const contactInChat = document.getElementById("contactInChat");
 
-var inputUsername_login = document.getElementById("inputUsername-login");
-var inputPassword_login = document.getElementById("inputPassword-login");
-var inputUsername_signup = document.getElementById("inputUsername-signup");
-var inputNickname = document.getElementById("inputNickname");
-var inputPassword_signup = document.getElementById("inputPassword-signup");
-var passwordVerfication = document.getElementById("verifyPassword");
-var inputPfp = document.getElementById("inputPfp");
+const messageInputImage = document.getElementById("messageInputImage");
+const messageInputVideo = document.getElementById("messageInputVideo");
 
-var userInfo = document.getElementById("user-info");
-var inputContact = document.getElementById("inputContact");
-var chatList = document.getElementById("chatList");
-var close_add_contact = document.getElementById("close-add-contact");
-var closeImageAttach = document.getElementById("close-image-attach");
-var closeVideoAttach = document.getElementById("close-video-attach");
-var closeAudioAttach = document.getElementById("close-audio-attach");
-var sentChat = document.getElementById("sentChat");
-var contactInChat = document.getElementById("contactInChat");
-
-var messageInputImage = document.getElementById("messageInputImage");
-var messageInputVideo = document.getElementById("messageInputVideo");
-var messageInputAudio = document.getElementById("messageInputAudio");
-
-var imageButton = document.getElementById("imageButton");
-var videoButton = document.getElementById("videoButton");
-var microphoneButton = document.getElementById("microphoneButton");
-var text_message_to_send = document.getElementById("message-to-send");
-var button_addon2 = document.getElementById("button-addon2");
+const imageButton = document.getElementById("imageButton");
+const videoButton = document.getElementById("videoButton");
+const microphoneButton = document.getElementById("microphoneButton");
+const text_message_to_send = document.getElementById("message-to-send");
+const sendTextMessageButton = document.getElementById("sendTextMessageButton");
 
 imageButton.disabled = true;
 videoButton.disabled = true;
 microphoneButton.disabled = true;
 text_message_to_send.disabled = true;
-button_addon2.disabled = true;
+sendTextMessageButton.disabled = true;
+
+document.getElementById("loginButton").addEventListener("click", logIn);
+document.getElementById("registerButton").addEventListener("click", hideLogin);
+document.getElementById("signUpButton").addEventListener("click", signUp);
+document.getElementById("alreadyRegisteredButton").addEventListener("click", hideSignup);
+document.getElementById("addContactButton").addEventListener("click", addContact);
+document.getElementById("sendImageMessageButton").addEventListener("click", () => { sendMessage(new ImageMessage(loggedUser)); });
+document.getElementById("sendVideoMessageButton").addEventListener("click", () => { sendMessage(new VideoMessage(loggedUser)); });
+document.getElementById("sendAudioMessageButton").addEventListener("click", () => {
+    if (messageInputAudioObjectURL != null) {
+        sendMessage(new AudioMessage(loggedUser));
+        messageInputAudioObjectURL = null;    
+    } else {
+        alert("You haven't recorded a message yet");
+    }
+});
+sendTextMessageButton.addEventListener("click", () => { sendMessage(new TextMessage(loggedUser)); });
+document.getElementById("closeMicrophoneModalButton").addEventListener("click", () => { messageInputAudioObjectURL = null; });
+
+
+
+class TextMessage {
+    constructor(senderId, content) {
+        this.senderId = senderId;
+        this.date = new Date();
+        this.content = text_message_to_send.value;
+        /////
+        if (content != null) {
+            this.content = content;
+        }
+        /////
+    } 
+
+    writeMessageInDocument(wasSentByLoggedUser) {
+        let rowDiv = document.createElement("div");
+        let colDiv = document.createElement("div");
+        let spanD = document.createElement("span");
+    
+        let messageText = document.createTextNode(this.content);
+    
+        rowDiv.className = "row";
+        colDiv.className = "col";
+        spanD.className = wasSentByLoggedUser ? "usersSpeechBubble" : "othersSpeechBubble";
+    
+        spanD.appendChild(messageText);
+        colDiv.appendChild(spanD);
+        rowDiv.appendChild(colDiv);
+        sentChat.appendChild(rowDiv);
+    
+        text_message_to_send.value = "";
+        scrollChat();
+    }
+
+    generateLatestMessageText() {
+        return cutLongString(this.content, MAX_LATEST_MESSAGE_LENGTH);
+    }
+}
+
+
+class ImageMessage {
+    constructor(senderId) {
+        this.senderId = senderId;
+        this.date = new Date();
+        this.content = URL.createObjectURL(messageInputImage.files[0]);
+    }
+
+    writeMessageInDocument(wasSentByLoggedUser) {
+        const modalId = "messageImage" + amountOfImagesInChat;
+        amountOfImagesInChat++;
+    
+    
+    
+        var input = document.createElement("div");
+        input.className = "row";
+        var col = document.createElement("div");
+        col.className = "col";
+    
+    
+        var speechBubbleSpan = document.createElement("span");
+        speechBubbleSpan.className = wasSentByLoggedUser ? "usersSpeechBubble img-message" : "othersSpeechBubble img-message";
+    
+        var imageModalButton = document.createElement("button");
+        imageModalButton.type = "button";
+        imageModalButton.className = "btn";
+        imageModalButton.setAttribute("data-bs-toggle", "modal");
+        imageModalButton.setAttribute("data-bs-target", "#" + modalId);
+    
+        var imageInSpeechBubble = document.createElement("img");
+        imageInSpeechBubble.src = this.content;
+        imageInSpeechBubble.style.width = "200px";
+    
+        imageModalButton.appendChild(imageInSpeechBubble);
+        speechBubbleSpan.appendChild(imageModalButton);
+        col.appendChild(speechBubbleSpan);
+    
+    
+        var modalDiv = document.createElement("div");
+        modalDiv.className = "modal fade";
+        modalDiv.id = modalId;
+        modalDiv.tabIndex = -1;
+        modalDiv.setAttribute("aria-labelledby", "messagePicLabel");
+        modalDiv.setAttribute("aria-hidden", "true");
+    
+        var modalDialogDiv = document.createElement("div");
+        modalDialogDiv.className = "modal-dialog";
+        var modalContentDiv = document.createElement("div");
+        modalContentDiv.className = "modal-content";
+    
+    
+        var modalHeader = document.createElement("div");
+        modalHeader.className = "modal-header";
+    
+        var closeModalButton = document.createElement("button");
+        closeModalButton.type = "button";
+        closeModalButton.className = "btn-close";
+        closeModalButton.setAttribute("data-bs-dismiss", "modal");
+        closeModalButton.setAttribute("aria-label", "Close");
+            
+        modalHeader.appendChild(closeModalButton);
+        modalContentDiv.appendChild(modalHeader);
+    
+    
+        var modalBodyDiv = document.createElement("div");
+        modalBodyDiv.className = "modal-body";
+    
+        var imageInModal = document.createElement("img");
+        imageInModal.src = this.content;
+        imageInModal.style.width = "100%";
+    
+        modalBodyDiv.appendChild(imageInModal);
+        modalContentDiv.appendChild(modalBodyDiv);
+    
+    
+        modalDialogDiv.appendChild(modalContentDiv);
+        modalDiv.appendChild(modalDialogDiv);
+        col.appendChild(modalDiv);
+        input.appendChild(col);
+    
+    
+    
+        sentChat.appendChild(input);
+        messageInputImage.value = "";
+        closeImageModalButton.click();
+        scrollChat();    
+    }
+
+    generateLatestMessageText() {
+        return "Image";
+    }
+}
+
+
+class VideoMessage {
+    constructor(senderId) {
+        this.senderId = senderId;
+        this.date = new Date();
+        this.content = URL.createObjectURL(messageInputVideo.files[0]);
+    }
+
+    writeMessageInDocument(wasSentByLoggedUser) {
+        const modalId = "messageVideo" + amountOfVideosInChat;
+        amountOfVideosInChat++;
+    
+    
+    
+        var input = document.createElement("div");
+        input.className = "row";
+        var col = document.createElement("div");
+        col.className = "col";
+    
+    
+        var speechBubbleSpan = document.createElement("span");
+        speechBubbleSpan.className = wasSentByLoggedUser ? "usersSpeechBubble img-message" : "othersSpeechBubble img-message";
+    
+        var videoModalButton = document.createElement("button");
+        videoModalButton.type = "button";
+        videoModalButton.className = "btn";
+        videoModalButton.setAttribute("data-bs-toggle", "modal");
+        videoModalButton.setAttribute("data-bs-target", "#" + modalId);
+    
+        var videoInSpeechBubble = document.createElement("video");
+        videoInSpeechBubble.width = 320;
+        videoInSpeechBubble.height = 240;
+    
+        var videoInSpeechBubbleSource = document.createElement("source");
+        videoInSpeechBubbleSource.src = this.content;
+        videoInSpeechBubbleSource.type = "video/mp4";
+    
+        videoInSpeechBubble.appendChild(videoInSpeechBubbleSource);
+        videoModalButton.appendChild(videoInSpeechBubble);
+        speechBubbleSpan.appendChild(videoModalButton);
+        col.appendChild(speechBubbleSpan);
+    
+    
+        var modalDiv = document.createElement("div");
+        modalDiv.className = "modal fade";
+        modalDiv.id = modalId;
+        modalDiv.tabIndex = -1;
+        modalDiv.setAttribute("aria-labelledby", "messagePicLabel");
+        modalDiv.setAttribute("aria-hidden", "true");
+        modalDiv.setAttribute("data-bs-backdrop", "static");
+        modalDiv.setAttribute("data-bs-keyboard", "false");
+    
+        var modalDialogDiv = document.createElement("div");
+        modalDialogDiv.className = "modal-dialog";
+        var modalContentDiv = document.createElement("div");
+        modalContentDiv.className = "modal-content";
+    
+    
+        var modalHeader = document.createElement("div");
+        modalHeader.className = "modal-header";
+    
+        var closeModalButton = document.createElement("button");
+        closeModalButton.type = "button";
+        closeModalButton.className = "btn-close";
+        closeModalButton.setAttribute("data-bs-dismiss", "modal");
+        closeModalButton.setAttribute("aria-label", "Close");
+        const currentVideoIndex = amountOfVideosInChat - 1;
+        closeModalButton.addEventListener("click", () => {
+            sentVideos[currentVideoIndex].pause();
+            sentVideos[currentVideoIndex].currentTime = 0;        
+        });
+    
+        modalHeader.appendChild(closeModalButton);
+        modalContentDiv.appendChild(modalHeader);
+    
+    
+        var modalBodyDiv = document.createElement("div");
+        modalBodyDiv.className = "modal-body";
+    
+        var videoInModal = document.createElement("video");
+        videoInModal.style.width = "100%";
+        videoInModal.controls = true;
+    
+        var videoInModalSource = document.createElement("source");
+        videoInModalSource.src = this.content;
+        videoInModalSource.type = "video/mp4";
+    
+        videoInModal.appendChild(videoInModalSource);
+        modalBodyDiv.appendChild(videoInModal);
+        modalContentDiv.appendChild(modalBodyDiv);
+    
+    
+        modalDialogDiv.appendChild(modalContentDiv);
+        modalDiv.appendChild(modalDialogDiv);
+        col.appendChild(modalDiv);
+        input.appendChild(col);
+    
+    
+            
+        sentVideos.push(videoInModal);
+        sentChat.appendChild(input);
+        messageInputVideo.value = "";
+        closeVideoModalButton.click();
+        scrollChat();
+    }
+
+    generateLatestMessageText() {
+        return "Video";
+    }
+}
+
+
+class AudioMessage {
+    constructor(senderId) {
+        this.senderId = senderId;
+        this.date = new Date();
+        this.content = messageInputAudioObjectURL;
+    }
+
+    writeMessageInDocument(wasSentByLoggedUser) {
+        var rowDiv = document.createElement("div");
+        rowDiv.className = "row";
+        var colDiv = document.createElement("div");
+        colDiv.className = "col";
+        var speechBubbleSpan = document.createElement("span");
+        speechBubbleSpan.className = wasSentByLoggedUser ? "usersSpeechBubble" : "othersSpeechBubble";
+        var audioElement = document.createElement("audio");
+        audioElement.controls = true;
+        var audioSource = document.createElement("source");
+        audioSource.src = this.content;
+        audioSource.type = "audio/mpeg";
+    
+        audioElement.appendChild(audioSource);
+        speechBubbleSpan.appendChild(audioElement);
+        colDiv.appendChild(speechBubbleSpan);
+        rowDiv.appendChild(colDiv);
+        sentChat.appendChild(rowDiv);
+    
+        closeMicrophoneModalButton.click();
+        scrollChat();    
+    }
+
+    generateLatestMessageText() {
+        return "Audio";
+    }
+}
+
+
+messagesMap.set("0:1", [new TextMessage(0, "I'm a wizard"), new TextMessage(1, "I'm a jedi")]);
+messagesMap.set("0:2", [new TextMessage(2, "I'm a time traveler"), new TextMessage(0, "I also time traveled in my third book")]);
+messagesMap.set("1:2", [new TextMessage(2, "Did you ever hear the tragedy of Darth Plagueis The Wise?"), new TextMessage(1, "Yup...")]);
+
+
 
 
 function logIn() {
@@ -198,47 +475,21 @@ function signUp() {
     hideSignup();
 }
 
-function sendMessage(typeOfMessage) {
-    var message = typeOfMessage.getCurrentInputValueOfThisMessageType();
-    if (message != '') {
-        addMessageToMessagesMap(message, typeOfMessage);
-        typeOfMessage.writeMessageInDocument(message, true);
-        updateLatestMessage(typeOfMessage.generateLatestMessageText(message), sendTo);
+function sendMessage(message) {
+    if (message.content != '') {
+        addMessageToMessagesMap(message);
+        message.writeMessageInDocument(message, true);
+        updateLatestMessage(message, sendTo);
     }
 }
 
-function addMessageToMessagesMap(message, typeOfMessage) {
-    var messageObj = {
-        senderId: loggedUser,
-        content: message,
-        typeOfMessage: typeOfMessage
-    }
+function addMessageToMessagesMap(message) {
     if (messagesMap.has(messageKey)) {
         messagesList = messagesMap.get(messageKey);
-        messagesList.push(messageObj);
+        messagesList.push(message);
     } else {
-        messagesMap.set(messageKey, [messageObj]);
+        messagesMap.set(messageKey, [message]);
     }
-}
-
-function writeTextMessageInDocument(message, wasSentByLoggedUser) {
-    let rowDiv = document.createElement("div");
-    let colDiv = document.createElement("div");
-    let spanD = document.createElement("span");
-
-    let messageText = document.createTextNode(message);
-
-    rowDiv.className = "row";
-    colDiv.className = "col";
-    spanD.className = wasSentByLoggedUser ? "usersSpeechBubble" : "othersSpeechBubble";
-
-    spanD.appendChild(messageText);
-    colDiv.appendChild(spanD);
-    rowDiv.appendChild(colDiv);
-    sentChat.appendChild(rowDiv);
-
-    text_message_to_send.value = "";
-    scrollChat();
 }
 
 function loadContactMessages(contactId) {
@@ -264,8 +515,8 @@ function loadContactMessages(contactId) {
         let amountOfMessages = messagesList.length;
 
         for (i = 0; i < amountOfMessages; i++) {
-            const messageObj = messagesList[i];
-            messageObj.typeOfMessage.writeMessageInDocument(messageObj.content, loggedUser == messageObj.senderId);
+            const message = messagesList[i];
+            message.writeMessageInDocument(loggedUser == message.senderId);
         }
     }
 }
@@ -284,11 +535,12 @@ function enableSendMessageTabContents() {
     videoButton.disabled = false;
     microphoneButton.disabled = false;
     text_message_to_send.disabled = false;
-    button_addon2.disabled = false;
+    sendTextMessageButton.disabled = false;
 }
 
-function updateLatestMessage(latestMessageText, contactId) {
-    document.getElementById(contactId + "-latestMessage").textContent = latestMessageText;
+function updateLatestMessage(latestMessage, contactId) {
+    latestMessageDivs.get(contactId).innerHTML = latestMessage.generateLatestMessageText();
+    latestMessageDateDivs.get(contactId).innerHTML = latestMessage.date.toUTCString();
 }
 
 function loadContactInChat(nickname, profile) {
@@ -343,17 +595,53 @@ function addContact() {
         hasAContactBeenAdded = true;
     }
 
-    chatList.innerHTML += "<li class=\"list-group-item d-flex justify-content-between align-items-start\"\
-                                onclick=\"loadContactMessages(\'" + contact.userId + "\');loadContactInChat(\'" + contact.nickname + "\',\'" + contact.pfp + "\');\">\
-                            <img src=\"" + contact.pfp + "\" alt=\"Avatar\" class=\"contact-profile\">\
-                            <div class=\"ms-2 me-auto\">\
-                                <div class=\"fw-bold\">" + contact.nickname + "</div>\
-                                <div id=\"" + contact.userId + "-latestMessage\">" + getLatestMessage(loggedUser, contact.userId) + "</div>\
-                            </div>\
-                        </li>";
-    close_add_contact.click();
-    inputContact.value = "";
+    const latestMessage = getLatestMessage(loggedUser, contact.userId);
+    if (latestMessage == null) {
+        var latestMessageGeneratedText = "";
+        var latestMessageDate = "";
+    } else {
+        var latestMessageGeneratedText = latestMessage.generateLatestMessageText();
+        var latestMessageDate = latestMessage.date.toUTCString();
+    }
 
+    const listItemOfContact = document.createElement("li");
+    listItemOfContact.className = "list-group-item d-flex justify-content-between align-items-start";
+    listItemOfContact.addEventListener("click", () => {loadContactMessages(contact.userId); loadContactInChat(contact.nickname, contact.pfp);});
+
+    const contactPfpElement = document.createElement("img");
+    contactPfpElement.src = contact.pfp;
+    contactPfpElement.alt = "Avatar";
+    contactPfpElement.className = "contact-profile";
+
+    listItemOfContact.appendChild(contactPfpElement);
+
+    const contactDataDiv = document.createElement("div");
+    contactDataDiv.className = "ms-2 me-auto";
+
+    const nicknameDiv = document.createElement("div");
+    nicknameDiv.className = "fw-bold";
+    nicknameDiv.innerHTML = contact.nickname;
+
+    contactDataDiv.appendChild(nicknameDiv);
+
+    const latestMessageDiv = document.createElement("div");
+    latestMessageDiv.innerHTML = latestMessageGeneratedText;
+
+    latestMessageDivs.set(contact.userId, latestMessageDiv);
+    contactDataDiv.appendChild(latestMessageDiv);
+
+    const latestMessageDateDiv = document.createElement("div");
+    latestMessageDateDiv.className = "latest-message-date";
+    latestMessageDateDiv.innerHTML = latestMessageDate;
+
+    latestMessageDateDivs.set(contact.userId, latestMessageDateDiv);
+    contactDataDiv.appendChild(latestMessageDateDiv);
+
+    listItemOfContact.appendChild(contactDataDiv);
+    chatList.appendChild(listItemOfContact);
+
+    closeAddContact.click();
+    inputContact.value = "";
 }
 
 function getLatestMessage(userId1, userId2) {
@@ -361,10 +649,10 @@ function getLatestMessage(userId1, userId2) {
     if (messagesMap.has(messageKeyOfThe2Users)) {
         messagesList = messagesMap.get(messageKeyOfThe2Users);
         const amountOfMessages = messagesList.length;
-        const latestMessageObj = messagesList[amountOfMessages - 1];
-        return latestMessageObj.typeOfMessage.generateLatestMessageText(latestMessageObj.content);
+        const latestMessage = messagesList[amountOfMessages - 1];
+        return latestMessage;
     } else {
-        return "";
+        return null;
     }
 }
 
@@ -409,211 +697,54 @@ function getChat(nickname, picture) {
     userInfo.appendChild(nickname);
 }
 
-
-function writeImageMessageInDocument(imageMessageUrlObject, wasSentByLoggedUser) {
-    const modalId = "messageImage" + amountOfImagesInChat;
-    amountOfImagesInChat++;
-
-
-
-    var input = document.createElement("div");
-    input.className = "row";
-    var col = document.createElement("div");
-    col.className = "col";
-
-
-    var speechBubbleSpan = document.createElement("span");
-    speechBubbleSpan.className = wasSentByLoggedUser ? "usersSpeechBubble img-message" : "othersSpeechBubble img-message";
-
-    var imageModalButton = document.createElement("button");
-    imageModalButton.type = "button";
-    imageModalButton.className = "btn";
-    imageModalButton.setAttribute("data-bs-toggle", "modal");
-    imageModalButton.setAttribute("data-bs-target", "#" + modalId);
-
-    var imageInSpeechBubble = document.createElement("img");
-    imageInSpeechBubble.src = imageMessageUrlObject;
-    imageInSpeechBubble.style.width = "200px";
-
-    imageModalButton.appendChild(imageInSpeechBubble);
-    speechBubbleSpan.appendChild(imageModalButton);
-    col.appendChild(speechBubbleSpan);
-
-
-    var modalDiv = document.createElement("div");
-    modalDiv.className = "modal fade";
-    modalDiv.id = modalId;
-    modalDiv.tabIndex = -1;
-    modalDiv.setAttribute("aria-labelledby", "messagePicLabel");
-    modalDiv.setAttribute("aria-hidden", "true");
-
-    var modalDialogDiv = document.createElement("div");
-    modalDialogDiv.className = "modal-dialog";
-    var modalContentDiv = document.createElement("div");
-    modalContentDiv.className = "modal-content";
-
-
-    var modalHeader = document.createElement("div");
-    modalHeader.className = "modal-header";
-
-    var closeModalButton = document.createElement("button");
-    closeModalButton.type = "button";
-    closeModalButton.className = "btn-close";
-    closeModalButton.setAttribute("data-bs-dismiss", "modal");
-    closeModalButton.setAttribute("aria-label", "Close");
-        
-    modalHeader.appendChild(closeModalButton);
-    modalContentDiv.appendChild(modalHeader);
-
-
-    var modalBodyDiv = document.createElement("div");
-    modalBodyDiv.className = "modal-body";
-
-    var imageInModal = document.createElement("img");
-    imageInModal.src = imageMessageUrlObject;
-    imageInModal.style.width = "100%";
-
-    modalBodyDiv.appendChild(imageInModal);
-    modalContentDiv.appendChild(modalBodyDiv);
-
-
-    modalDialogDiv.appendChild(modalContentDiv);
-    modalDiv.appendChild(modalDialogDiv);
-    col.appendChild(modalDiv);
-    input.appendChild(col);
-
-
-
-    sentChat.appendChild(input);
-    messageInputImage.value = "";
-    closeImageAttach.click();
-    scrollChat();
-}
-
-function writeVideoMessageInDocument(videoMessageUrlObject, wasSentByLoggedUser) {
-    const modalId = "messageVideo" + amountOfVideosInChat;
-    amountOfVideosInChat++;
-
-
-
-    var input = document.createElement("div");
-    input.className = "row";
-    var col = document.createElement("div");
-    col.className = "col";
-
-
-    var speechBubbleSpan = document.createElement("span");
-    speechBubbleSpan.className = wasSentByLoggedUser ? "usersSpeechBubble img-message" : "othersSpeechBubble img-message";
-
-    var videoModalButton = document.createElement("button");
-    videoModalButton.type = "button";
-    videoModalButton.className = "btn";
-    videoModalButton.setAttribute("data-bs-toggle", "modal");
-    videoModalButton.setAttribute("data-bs-target", "#" + modalId);
-
-    var videoInSpeechBubble = document.createElement("video");
-    videoInSpeechBubble.width = 320;
-    videoInSpeechBubble.height = 240;
-
-    var videoInSpeechBubbleSource = document.createElement("source");
-    videoInSpeechBubbleSource.src = videoMessageUrlObject;
-    videoInSpeechBubbleSource.type = "video/mp4";
-
-    videoInSpeechBubble.appendChild(videoInSpeechBubbleSource);
-    videoModalButton.appendChild(videoInSpeechBubble);
-    speechBubbleSpan.appendChild(videoModalButton);
-    col.appendChild(speechBubbleSpan);
-
-
-    var modalDiv = document.createElement("div");
-    modalDiv.className = "modal fade";
-    modalDiv.id = modalId;
-    modalDiv.tabIndex = -1;
-    modalDiv.setAttribute("aria-labelledby", "messagePicLabel");
-    modalDiv.setAttribute("aria-hidden", "true");
-    modalDiv.setAttribute("data-bs-backdrop", "static");
-    modalDiv.setAttribute("data-bs-keyboard", "false");
-
-    var modalDialogDiv = document.createElement("div");
-    modalDialogDiv.className = "modal-dialog";
-    var modalContentDiv = document.createElement("div");
-    modalContentDiv.className = "modal-content";
-
-
-    var modalHeader = document.createElement("div");
-    modalHeader.className = "modal-header";
-
-    var closeModalButton = document.createElement("button");
-    closeModalButton.type = "button";
-    closeModalButton.className = "btn-close";
-    closeModalButton.setAttribute("data-bs-dismiss", "modal");
-    closeModalButton.setAttribute("aria-label", "Close");
-    const currentVideoIndex = amountOfVideosInChat - 1;
-    closeModalButton.addEventListener("click", function(){closeVideo(currentVideoIndex);});
-
-    modalHeader.appendChild(closeModalButton);
-    modalContentDiv.appendChild(modalHeader);
-
-
-    var modalBodyDiv = document.createElement("div");
-    modalBodyDiv.className = "modal-body";
-
-    var videoInModal = document.createElement("video");
-    videoInModal.style.width = "100%";
-    videoInModal.controls = true;
-
-    var videoInModalSource = document.createElement("source");
-    videoInModalSource.src = videoMessageUrlObject;
-    videoInModalSource.type = "video/mp4";
-
-    videoInModal.appendChild(videoInModalSource);
-    modalBodyDiv.appendChild(videoInModal);
-    modalContentDiv.appendChild(modalBodyDiv);
-
-
-    modalDialogDiv.appendChild(modalContentDiv);
-    modalDiv.appendChild(modalDialogDiv);
-    col.appendChild(modalDiv);
-    input.appendChild(col);
-
-
-        
-    sentVideos.push(videoInModal);
-    sentChat.appendChild(input);
-    messageInputVideo.value = "";
-    closeVideoAttach.click();
-    scrollChat();
-}
-
-function writeAudioMessageInDocument(audioMessageUrlObject ,wasSentByLoggedUser) {
-    var rowDiv = document.createElement("div");
-    rowDiv.className = "row";
-    var colDiv = document.createElement("div");
-    colDiv.className = "col";
-    var speechBubbleSpan = document.createElement("span");
-    speechBubbleSpan.className = wasSentByLoggedUser ? "usersSpeechBubble" : "othersSpeechBubble";
-    var audioElement = document.createElement("audio");
-    audioElement.controls = true;
-    var audioSource = document.createElement("source");
-    audioSource.src = audioMessageUrlObject;
-    audioSource.type = "audio/mpeg";
-
-    audioElement.appendChild(audioSource);
-    speechBubbleSpan.appendChild(audioElement);
-    colDiv.appendChild(speechBubbleSpan);
-    rowDiv.appendChild(colDiv);
-    sentChat.appendChild(rowDiv);
-
-    closeAudioAttach.click();
-    messageInputAudio.value = ""
-    scrollChat();
-}
-
 function scrollChat(){
     sentChat.scrollTop = sentChat.scrollHeight;
 }
 
-function closeVideo(videoIndex) {
-    sentVideos[videoIndex].pause();
-    sentVideos[videoIndex].currentTime = 0;
+
+
+var audioRecorder;
+
+document.getElementById("startRecordingButton").addEventListener("click", startRecording);
+document.getElementById("stopRecordingButton").addEventListener("click", stopRecording);
+
+async function generateAudioRecorder() {
+    const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mediaRecorder = new MediaRecorder(mediaStream);
+    const audioChunks = [];
+
+    mediaRecorder.addEventListener("dataavailable", event => {
+        audioChunks.push(event.data);
+    });
+
+    const start = () => {
+        mediaRecorder.start();
+    };
+
+    const stop = () => {
+        return new Promise(resolve => {
+            mediaRecorder.addEventListener("stop", () => {
+                const audioBlob = new Blob(audioChunks);
+                const audioUrl = URL.createObjectURL(audioBlob);
+                resolve(audioUrl);
+            });
+
+            mediaRecorder.stop();
+        });
+    };
+        
+    return {start, stop};
+};
+
+async function startRecording() {
+    audioRecorder = await generateAudioRecorder();
+    audioRecorder.start();
+}
+
+async function stopRecording() {
+    if (audioRecorder == null) {
+        return;
+    }
+    messageInputAudioObjectURL = await audioRecorder.stop();
+    audioRecorder = null;
 }

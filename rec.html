@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Rec</title>
+</head>
+
+<body>
+
+    <button id="btnStartRec">Start recording</button>
+    <button id="btnStopRec">Stop recording</button>
+
+    <div id="audioPlayerDiv"></div>
+
+    <script>
+        var audioRecorder;
+        var audioPlayerDiv = document.getElementById("audioPlayerDiv");
+
+        document.getElementById("btnStartRec").addEventListener("click", startRecording);
+        document.getElementById("btnStopRec").addEventListener("click", stopRecording);
+
+        async function generateAudioRecorder() {
+            const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const mediaRecorder = new MediaRecorder(mediaStream);
+            const audioChunks = [];
+
+            mediaRecorder.addEventListener("dataavailable", event => {
+                            audioChunks.push(event.data);
+                        });
+
+            const start = () => {
+                mediaRecorder.start();
+            };
+
+            const stop = () => {
+                return new Promise(resolve => {
+                    mediaRecorder.addEventListener("stop", () => {
+                        const audioBlob = new Blob(audioChunks);
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        resolve(audioUrl);
+                    });
+
+                    mediaRecorder.stop();
+                });
+            };
+                
+            return {start, stop};
+        };
+        
+        async function startRecording() {
+            audioPlayerDiv.innerHTML = "";
+            audioRecorder = await generateAudioRecorder();
+            audioRecorder.start();
+        }
+        async function stopRecording() {
+            if (audioRecorder == null) {
+                return;
+            }
+            const audioUrl = await audioRecorder.stop();
+
+            var audioPlayer = document.createElement("audio");
+            audioPlayer.controls = true;
+            var audioPlayerSourceElement = document.createElement("source");
+            audioPlayerSourceElement.src = audioUrl;
+            audioPlayerSourceElement.type = "audio/mpeg";
+            audioPlayer.appendChild(audioPlayerSourceElement);
+            audioPlayerDiv.appendChild(audioPlayer);
+
+            audioRecorder = null;
+        }
+    </script>
+
+</body>
+
+</html>

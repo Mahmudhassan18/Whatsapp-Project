@@ -30,10 +30,10 @@
             </div>
             <div class="row mb-3">
                 <span class="col-sm-2">
-                    <button type="button" onclick="logIn()" class="btn btn-primary">Sign in</button>
+                    <button type="button" class="btn btn-primary" id="loginButton">Sign in</button>
                 </span>
                 <span class="col-sm-10" style="text-align: center">
-                    Not registered? <button type="button" class="click-here" onclick="hideLogin()">Click here</button>
+                    Not registered? <button type="button" class="click-here" id="registerButton">Click here</button>
                     to register.
                 </span>
             </div>
@@ -77,10 +77,10 @@
             </div>
             <div class="row mb-3">
                 <span class="col-sm-2">
-                    <button type="button" onclick="signUp()" class="btn btn-primary">Sign up</button>
+                    <button type="button" class="btn btn-primary" id="signUpButton">Sign up</button>
                 </span>
                 <span class="col-sm-10" style="text-align: center">
-                    Already registered? <button type="button" class="click-here" onclick="hideSignup()">Click
+                    Already registered? <button type="button" class="click-here" id="alreadyRegisteredButton">Click
                         here</button> to sign in.
                 </span>
             </div>
@@ -109,7 +109,7 @@
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLabel">Add contact</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        id="close-add-contact" aria-label="Close"></button>
+                                        id="closeAddContact" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="input-group mb-3">
@@ -118,9 +118,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" onclick="addContact()">Add</button>
+                                    <button type="button" class="btn btn-primary" id="addContactButton">Add</button>
                                 </div>
                             </div>
                         </div>
@@ -163,7 +161,7 @@
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="imageModalLabel">Upload Image
                                                 </h5>
-                                                <button type="button" id="close-image-attach" class="btn-close" data-bs-dismiss="modal"
+                                                <button type="button" id="closeImageModalButton" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
@@ -172,9 +170,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                                <button type="button" onclick="sendMessage(messageTypes.image)"
+                                                <button type="button" id="sendImageMessageButton"
                                                     class="btn btn-primary">Send</button>
                                             </div>
                                         </div>
@@ -197,7 +193,7 @@
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="videoModalLabel">Upload Video
                                                 </h5>
-                                                <button type="button" id="close-video-attach" class="btn-close" data-bs-dismiss="modal"
+                                                <button type="button" id="closeVideoModalButton" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
@@ -206,9 +202,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                                <button type="button" onclick="sendMessage(messageTypes.video)"
+                                                <button type="button" id="sendVideoMessageButton"
                                                     class="btn btn-primary">Send</button>
                                             </div>
                                         </div>
@@ -231,18 +225,16 @@
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="microphoneModalLabel">Upload Recording</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
+                                                    aria-label="Close" id="closeMicrophoneModalButton"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <div class="input-group mb-3">
-                                                    <input type="file" accept=".mp3, audio/*" class="form-control"
-                                                        id="messageInputAudio">
+                                                <div class="mb-3">
+                                                    <button type="button" class="btn btn-secondary" id="startRecordingButton">Start recording</button>
+                                                    <button type="button" class="btn btn-secondary" id="stopRecordingButton">Stop recording</button>                                                
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" id="close-audio-attach" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                                <button type="button" onclick="sendMessage(messageTypes.audio)"
+                                                <button type="button" id="sendAudioMessageButton"
                                                     class="btn btn-primary">Send</button>
                                             </div>
                                         </div>
@@ -254,8 +246,8 @@
                                     <input type="text" class="form-control" id="message-to-send"
                                         placeholder="Type a message..." aria-label="Recipient's username"
                                         aria-describedby="button-addon2">
-                                    <button class="btn btn-outline-secondary" onclick="sendMessage(messageTypes.text)" type="button"
-                                        id="button-addon2">Send</button>
+                                    <button class="btn btn-outline-secondary" id="sendTextMessageButton"
+                                        type="button">Send</button>
                                 </div>
                             </div>
                         </div>

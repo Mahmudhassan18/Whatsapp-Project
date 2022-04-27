@@ -188,3 +188,8 @@ body {
     height: 60px;
     border-radius: 50%;
 }
+
+.latest-message-date{
+    font-size: 12px;
+    color: grey;
+}
