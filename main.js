@@ -118,11 +118,11 @@ class TextMessage {
     } 
 
     writeMessageInDocument(wasSentByLoggedUser) {
-        let rowDiv = document.createElement("div");
-        let colDiv = document.createElement("div");
-        let spanD = document.createElement("span");
+        const rowDiv = document.createElement("div");
+        const colDiv = document.createElement("div");
+        const spanD = document.createElement("span");
     
-        let messageText = document.createTextNode(this.content);
+        const messageText = document.createTextNode(this.content);
     
         rowDiv.className = "row";
         colDiv.className = "col";
@@ -156,22 +156,22 @@ class ImageMessage {
     
     
     
-        var input = document.createElement("div");
+        const input = document.createElement("div");
         input.className = "row";
-        var col = document.createElement("div");
+        const col = document.createElement("div");
         col.className = "col";
     
     
-        var speechBubbleSpan = document.createElement("span");
+        const speechBubbleSpan = document.createElement("span");
         speechBubbleSpan.className = wasSentByLoggedUser ? "usersSpeechBubble img-message" : "othersSpeechBubble img-message";
     
-        var imageModalButton = document.createElement("button");
+        const imageModalButton = document.createElement("button");
         imageModalButton.type = "button";
         imageModalButton.className = "btn";
         imageModalButton.setAttribute("data-bs-toggle", "modal");
         imageModalButton.setAttribute("data-bs-target", "#" + modalId);
     
-        var imageInSpeechBubble = document.createElement("img");
+        const imageInSpeechBubble = document.createElement("img");
         imageInSpeechBubble.src = this.content;
         imageInSpeechBubble.style.width = "200px";
     
@@ -180,23 +180,23 @@ class ImageMessage {
         col.appendChild(speechBubbleSpan);
     
     
-        var modalDiv = document.createElement("div");
+        const modalDiv = document.createElement("div");
         modalDiv.className = "modal fade";
         modalDiv.id = modalId;
         modalDiv.tabIndex = -1;
         modalDiv.setAttribute("aria-labelledby", "messagePicLabel");
         modalDiv.setAttribute("aria-hidden", "true");
     
-        var modalDialogDiv = document.createElement("div");
+        const modalDialogDiv = document.createElement("div");
         modalDialogDiv.className = "modal-dialog";
-        var modalContentDiv = document.createElement("div");
+        const modalContentDiv = document.createElement("div");
         modalContentDiv.className = "modal-content";
     
     
-        var modalHeader = document.createElement("div");
+        const modalHeader = document.createElement("div");
         modalHeader.className = "modal-header";
     
-        var closeModalButton = document.createElement("button");
+        const closeModalButton = document.createElement("button");
         closeModalButton.type = "button";
         closeModalButton.className = "btn-close";
         closeModalButton.setAttribute("data-bs-dismiss", "modal");
@@ -206,10 +206,10 @@ class ImageMessage {
         modalContentDiv.appendChild(modalHeader);
     
     
-        var modalBodyDiv = document.createElement("div");
+        const modalBodyDiv = document.createElement("div");
         modalBodyDiv.className = "modal-body";
     
-        var imageInModal = document.createElement("img");
+        const imageInModal = document.createElement("img");
         imageInModal.src = this.content;
         imageInModal.style.width = "100%";
     
@@ -227,7 +227,7 @@ class ImageMessage {
         sentChat.appendChild(input);
         messageInputImage.value = "";
         closeImageModalButton.click();
-        scrollChat();    
+        scrollChat();
     }
 
     generateLatestMessageText() {
@@ -249,26 +249,26 @@ class VideoMessage {
     
     
     
-        var input = document.createElement("div");
+        const input = document.createElement("div");
         input.className = "row";
-        var col = document.createElement("div");
+        const col = document.createElement("div");
         col.className = "col";
     
     
-        var speechBubbleSpan = document.createElement("span");
+        const speechBubbleSpan = document.createElement("span");
         speechBubbleSpan.className = wasSentByLoggedUser ? "usersSpeechBubble img-message" : "othersSpeechBubble img-message";
     
-        var videoModalButton = document.createElement("button");
+        const videoModalButton = document.createElement("button");
         videoModalButton.type = "button";
         videoModalButton.className = "btn";
         videoModalButton.setAttribute("data-bs-toggle", "modal");
         videoModalButton.setAttribute("data-bs-target", "#" + modalId);
     
-        var videoInSpeechBubble = document.createElement("video");
+        const videoInSpeechBubble = document.createElement("video");
         videoInSpeechBubble.width = 320;
         videoInSpeechBubble.height = 240;
     
-        var videoInSpeechBubbleSource = document.createElement("source");
+        const videoInSpeechBubbleSource = document.createElement("source");
         videoInSpeechBubbleSource.src = this.content;
         videoInSpeechBubbleSource.type = "video/mp4";
     
@@ -278,7 +278,7 @@ class VideoMessage {
         col.appendChild(speechBubbleSpan);
     
     
-        var modalDiv = document.createElement("div");
+        const modalDiv = document.createElement("div");
         modalDiv.className = "modal fade";
         modalDiv.id = modalId;
         modalDiv.tabIndex = -1;
@@ -287,16 +287,16 @@ class VideoMessage {
         modalDiv.setAttribute("data-bs-backdrop", "static");
         modalDiv.setAttribute("data-bs-keyboard", "false");
     
-        var modalDialogDiv = document.createElement("div");
+        const modalDialogDiv = document.createElement("div");
         modalDialogDiv.className = "modal-dialog";
-        var modalContentDiv = document.createElement("div");
+        const modalContentDiv = document.createElement("div");
         modalContentDiv.className = "modal-content";
     
     
-        var modalHeader = document.createElement("div");
+        const modalHeader = document.createElement("div");
         modalHeader.className = "modal-header";
     
-        var closeModalButton = document.createElement("button");
+        const closeModalButton = document.createElement("button");
         closeModalButton.type = "button";
         closeModalButton.className = "btn-close";
         closeModalButton.setAttribute("data-bs-dismiss", "modal");
@@ -311,14 +311,14 @@ class VideoMessage {
         modalContentDiv.appendChild(modalHeader);
     
     
-        var modalBodyDiv = document.createElement("div");
+        const modalBodyDiv = document.createElement("div");
         modalBodyDiv.className = "modal-body";
     
-        var videoInModal = document.createElement("video");
+        const videoInModal = document.createElement("video");
         videoInModal.style.width = "100%";
         videoInModal.controls = true;
     
-        var videoInModalSource = document.createElement("source");
+        const videoInModalSource = document.createElement("source");
         videoInModalSource.src = this.content;
         videoInModalSource.type = "video/mp4";
     
@@ -355,15 +355,15 @@ class AudioMessage {
     }
 
     writeMessageInDocument(wasSentByLoggedUser) {
-        var rowDiv = document.createElement("div");
+        const rowDiv = document.createElement("div");
         rowDiv.className = "row";
-        var colDiv = document.createElement("div");
+        const colDiv = document.createElement("div");
         colDiv.className = "col";
-        var speechBubbleSpan = document.createElement("span");
+        const speechBubbleSpan = document.createElement("span");
         speechBubbleSpan.className = wasSentByLoggedUser ? "usersSpeechBubble" : "othersSpeechBubble";
-        var audioElement = document.createElement("audio");
+        const audioElement = document.createElement("audio");
         audioElement.controls = true;
-        var audioSource = document.createElement("source");
+        const audioSource = document.createElement("source");
         audioSource.src = this.content;
         audioSource.type = "audio/mpeg";
     
@@ -391,10 +391,10 @@ messagesMap.set("1:2", [new TextMessage(2, "Did you ever hear the tragedy of Dar
 
 
 function logIn() {
-    let inputUsername_login_val = inputUsername_login.value;
-    let inputPassword_login_val = inputPassword_login.value;
-    let amountOfUsers = usersObj.length;
-    for (i = 0; i < amountOfUsers; i++) {
+    const inputUsername_login_val = inputUsername_login.value;
+    const inputPassword_login_val = inputPassword_login.value;
+    const amountOfUsers = usersObj.length;
+    for (let i = 0; i < amountOfUsers; i++) {
         if (inputUsername_login_val == usersObj[i].username && inputPassword_login_val == usersObj[i].password) {
             loggedUser = usersObj[i].userId;
             showChat();
@@ -406,10 +406,10 @@ function logIn() {
 }
 
 function signUp() {
-    var inputUsername_signup_val = inputUsername_signup.value;
-    var inputNickname_val = inputNickname.value;
-    var inputPassword_signup_val = inputPassword_signup.value;
-    var passwordVerfication_val = passwordVerfication.value;
+    const inputUsername_signup_val = inputUsername_signup.value;
+    const inputNickname_val = inputNickname.value;
+    const inputPassword_signup_val = inputPassword_signup.value;
+    const passwordVerfication_val = passwordVerfication.value;
 
     if (inputUsername_signup_val == "" || inputNickname_val == "" || inputPassword_signup_val == "" || passwordVerfication_val == "") {
         alert("You must fill all fields");
@@ -421,20 +421,19 @@ function signUp() {
         return;
     }
 
-    let amountOfUsers = usersObj.length;
-    for (i = 0; i < amountOfUsers; i++) {
+    for (let i = 0; i < amountOfUsers; i++) {
         if (inputUsername_signup_val == usersObj[i].username) {
             alert("There already exists a user with this username");
             return;
         }
     }
 
-    let passwordLen = inputPassword_signup_val.length;
+    const passwordLen = inputPassword_signup_val.length;
     let isThereADigit = false;
     let isThereAnUppercaseLetter = false;
     let isThereALowercaseLetter = false;
 
-    for (i = 0; i < passwordLen; i++) {
+    for (let i = 0; i < passwordLen; i++) {
         if ('0' <= inputPassword_signup_val[i] && inputPassword_signup_val[i] <= '9') {
             isThereADigit = true;
         }
@@ -512,9 +511,9 @@ function loadContactMessages(contactId) {
 
     if (messagesMap.has(messageKey)) {
         messagesList = messagesMap.get(messageKey);
-        let amountOfMessages = messagesList.length;
+        const amountOfMessages = messagesList.length;
 
-        for (i = 0; i < amountOfMessages; i++) {
+        for (let i = 0; i < amountOfMessages; i++) {
             const message = messagesList[i];
             message.writeMessageInDocument(loggedUser == message.senderId);
         }
@@ -544,9 +543,9 @@ function updateLatestMessage(latestMessage, contactId) {
 }
 
 function loadContactInChat(nickname, profile) {
-    let colDiv = document.createElement("div");
-    let userImg = document.createElement("img");
-    let userNickname = document.createTextNode(nickname);
+    const colDiv = document.createElement("div");
+    const userImg = document.createElement("img");
+    const userNickname = document.createTextNode(nickname);
     userImg.src = profile;
     userImg.alt = "Avatar";
     userImg.style.width = "60px";
@@ -561,14 +560,14 @@ function loadContactInChat(nickname, profile) {
 }
 
 function addContact() {
-    let inputContact_val = inputContact.value;
+    const inputContact_val = inputContact.value;
     if (inputContact_val == "") {
         alert("You must fill the contact's username field");
         return;
     }
 
     let contact = null;
-    for (i = 0; i < amountOfUsers; i++) {
+    for (let i = 0; i < amountOfUsers; i++) {
         if (inputContact_val.toLowerCase() == usersObj[i].username.toLowerCase()) {
             contact = usersObj[i];
             break;
@@ -686,15 +685,15 @@ function showChat() {
 function getChat(nickname, picture) {
     userInfo.innerHTML = ""
 
-    var userImg = document.createElement("img");
+    const userImg = document.createElement("img");
     userImg.src = picture;
     userImg.style.width = "60px";
     userImg.style.borderRadius = "50%";
     userImg.style.paddingRight = "5px";
-    var nickname = document.createTextNode(nickname);
+    const nicknameTextNode = document.createTextNode(nickname);
 
     userInfo.appendChild(userImg);
-    userInfo.appendChild(nickname);
+    userInfo.appendChild(nicknameTextNode);
 }
 
 function scrollChat(){

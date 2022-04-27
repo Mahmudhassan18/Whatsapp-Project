@@ -37,21 +37,6 @@ body {
     padding-bottom: 20px;
     padding-left: 50%;
 }
-    
-.chat-box{
-    padding-left: 30px;
-    padding-top: 45px;
-    padding-right: 30px;
-    padding-bottom: 45px;
-
-    margin-left: 100px;
-    margin-top: 50px;
-    margin-right: 100px;
-
-    border-radius: 20px;
-    background-color: white;
-
-}
 
 #greenSquare {
     background-color: green;
@@ -91,7 +76,7 @@ body {
     float: right;
 }
 
-.chatHistory {
+#sentChat {
     background-color: lightgoldenrodyellow;
     height: calc(80vh - 50px);
     overflow-y: auto;
@@ -132,50 +117,50 @@ body {
     float: left;
 }
 
-.list-group-item{
+.list-group-item {
     border-bottom: 0.5;
 
 }
 
-.list-group-item:hover{
+.list-group-item:hover {
     border-bottom: 0.5;
     background-color: lightgray;
 }
 
-.chatListCol{
+.chatListCol {
     overflow: auto;
     height: 80vh;
     background-color: white;
 }
 
-.most-left-attach-button{
+.most-left-attach-button {
     margin-left: 15px;
     padding: 0px;
 }
 
-.attach-button{
+.attach-button {
     padding: 0px;
 }
 
-.send-message{
+.send-message {
     padding-top: 5px;
     padding-right: 5px;
 }
 
-#login{
+#login {
     visibility: visible;
 }
 
-#signUp{
+#signUp {
     visibility: hidden;
 }
 
-#chat{
+#chat {
     visibility: hidden;
 }
 
 
-.click-here{
+.click-here {
     background-color: transparent;
     color: green;
     text-decoration: underline;
@@ -183,13 +168,17 @@ body {
     padding: 0px;
 }
 
-.contact-profile{
+.contact-profile {
     width: 60px;
     height: 60px;
     border-radius: 50%;
 }
 
-.latest-message-date{
+.latest-message-date {
     font-size: 12px;
     color: grey;
+}
+
+#chatAndContactsRow {
+    height:80vh;
 }
