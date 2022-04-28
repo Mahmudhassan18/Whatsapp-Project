@@ -46,37 +46,75 @@ const messagesMap = new Map();
 /**
  * The userId of the user which has logged into the website.
  */
-var loggedUser = null;
+let loggedUser = null;
 
 /**
  * The userId of the selected contact which we can send messages to.
  */
-var sendTo = null;
+let sendTo = null;
 
 /**
  * The key for the messagesMap of the logged user and the sendTo user.
  */
-var messageKey = null;
+let messageKey = null;
 
-var areSendMessageTabContentsEnabled = false;
+/**
+ * A boolean variable which is true when all of the buttons and message input
+ * in the send message tab are enabled.
+ */
+let areSendMessageTabContentsEnabled = false;
 
+/**
+ * An array of the video elements in the modals of video messages, for all of
+ * the video messages that are currently in the chat.
+ */
 const sentVideos = [];
-var amountOfImagesInChat = 0;
-var amountOfVideosInChat = 0;
 
-var messageInputAudioObjectURL = null;
+/**
+ * The amount of image messages that are currently in the chat.
+ */
+let amountOfImagesInChat = 0;
 
+/**
+ * The amount of video messages that are currently in the chat.
+ */
+let amountOfVideosInChat = 0;
+
+/**
+ * The URL object of the last recording for the audio message.
+ */
+let messageInputAudioObjectURL = null;
+
+/**
+ * A set of all the contacts which have been added so far.
+ */
 const addedContacts = new Set();
-var hasAContactBeenAdded = false;
 
+/**
+ * A boolean variable which is true when at least one contact has been added.
+ */
+let hasAContactBeenAdded = false;
+
+/**
+ * A map which maps userIds of added contacts, to the div elements
+ * of their latest message text in the added contacts list.
+ */
 const latestMessageDivs = new Map();
+
+/**
+ * A map which maps userIds of added contacts, to the div elements
+ * of the date of their latest message in the added contacts list.
+ */
 const latestMessageDateDivs = new Map();
 
-var amountOfUsers = 0;
-////
-amountOfUsers += 5;
-////
+/**
+ * The amount of users the website recognizes (the length of usersArr).
+ * Note that the website always launches with 5 recognized users, so the amount
+ * of users is initialized as 5 and not 0.
+ */
+let amountOfUsers = 5;
 
+//Every element in the HTML which needs to be accessed and stored into a constant variable is accessed here. 
 const loginBox = document.getElementById("login");
 const signupBox = document.getElementById("signUp");
 const chatBox = document.getElementById("chat");
@@ -108,35 +146,62 @@ const microphoneButton = document.getElementById("microphoneButton");
 const text_message_to_send = document.getElementById("message-to-send");
 const sendTextMessageButton = document.getElementById("sendTextMessageButton");
 
+//All of the buttons and the message input in the send message tab are disabled by default.
+//They will be enabled once a contact is selected.
 imageButton.disabled = true;
 videoButton.disabled = true;
 microphoneButton.disabled = true;
 text_message_to_send.disabled = true;
 sendTextMessageButton.disabled = true;
 
+
+//loginButton calls login() when clicked
 document.getElementById("loginButton").addEventListener("click", logIn);
+
+//registerButton calls hideLogin() when clicked (hides the login forms and shows the signup form instead)
 document.getElementById("registerButton").addEventListener("click", hideLogin);
+
+//signUpButton calls signUp() when clicked
 document.getElementById("signUpButton").addEventListener("click", signUp);
+
+//alreadyRegisteredButton calls hideSignup() when clicked (hides the signup forms and shows the login form instead)
 document.getElementById("alreadyRegisteredButton").addEventListener("click", hideSignup);
+
+//addContactButton calls addContact() when clicked
 document.getElementById("addContactButton").addEventListener("click", addContact);
 
+
+//sendImageMessageButton sends a new image message when clicked. It passes the id of the logged user.
 document.getElementById("sendImageMessageButton").addEventListener("click", () => {
-    sendMessage(new ImageMessage(loggedUser, URL.createObjectURL(messageInputImage.files[0])));
+    if (messageInputImage.value != "") {
+        sendMessage(new ImageMessage(loggedUser, URL.createObjectURL(messageInputImage.files[0])));
+    } else {
+        alert("You haven't chosen an image yet")
+    }
 });
 
+//sendVideoMessageButton sends a new video message when clicked. It passes the id of the logged user.
 document.getElementById("sendVideoMessageButton").addEventListener("click", () => {
-    sendMessage(new VideoMessage(loggedUser, URL.createObjectURL(messageInputVideo.files[0])));
+    if (messageInputVideo.value != "") {
+        sendMessage(new VideoMessage(loggedUser, URL.createObjectURL(messageInputVideo.files[0])));
+    } else {
+        alert("You haven't chosen a video yet");
+    }
 });
 
+//sendAudioMessageButton sends a new audio message when clicked. It passes the id of the logged user.
 document.getElementById("sendAudioMessageButton").addEventListener("click", () => {
     if (messageInputAudioObjectURL != null) {
         sendMessage(new AudioMessage(loggedUser));
-        messageInputAudioObjectURL = null;    
     } else {
         alert("You haven't recorded a message yet");
     }
 });
-sendTextMessageButton.addEventListener("click", () => { sendMessage(new TextMessage(loggedUser, text_message_to_send.value)); });
+sendTextMessageButton.addEventListener("click", () => {
+    if (text_message_to_send.value != "") {
+        sendMessage(new TextMessage(loggedUser, text_message_to_send.value));
+    }
+});
 document.getElementById("closeMicrophoneModalButton").addEventListener("click", () => { messageInputAudioObjectURL = null; });
 
 
@@ -154,7 +219,7 @@ class TextMessage {
     }
 
     addNewlines(str) {
-        var result = '';
+        let result = '';
         while (str.length > 0) {
           let lastHundred = str.lastIndexOf(' ', 100);
           if(lastHundred == -1){
@@ -162,7 +227,7 @@ class TextMessage {
               str = str.substring(100);
           }
           else{
-              console.log(lastHundred)
+              //console.log(lastHundred);
               result += str.substring(0, lastHundred+1) + '\n';
               str = str.substring(lastHundred+1);
           }
@@ -427,7 +492,12 @@ class AudioMessage {
         sentChat.appendChild(rowDiv);
     
         closeMicrophoneModalButton.click();
-        scrollChat();    
+        scrollChat();
+
+        //After the message is send, the URL object of the latest recording is cleared.
+        //That way the message can't be send again.
+        messageInputAudioObjectURL = null;    
+
     }
 
     generateLatestMessageText() {
@@ -519,12 +589,9 @@ function signUp() {
 }
 
 function sendMessage(message) {
-    if (message.content != '') {
-        addMessageToMessagesMap(message);
-        message.writeMessageInDocument(message, true);
-        updateLatestMessage(message, sendTo);
-        scrollChat();
-    }
+    addMessageToMessagesMap(message);
+    message.writeMessageInDocument(message, true);
+    updateLatestMessage(message, sendTo);
 }
 
 function addMessageToMessagesMap(message) {
@@ -750,7 +817,7 @@ function scrollChat(){
 
 
 
-var audioRecorder;
+let audioRecorder;
 
 document.getElementById("startRecordingButton").addEventListener("click", startRecording);
 document.getElementById("stopRecordingButton").addEventListener("click", stopRecording);
