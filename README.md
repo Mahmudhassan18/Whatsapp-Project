@@ -13,11 +13,11 @@ Ilay Daniel 326646650<br />
 &emsp;&emsp;&emsp;&emsp;iii).MartyMcFly : TimeTraveler3<br />
 &emsp;&emsp;&emsp;&emsp;iv).KobeBryant : Mamba24<br />
 &emsp;&emsp;&emsp;&emsp;v).LebronJames : King23<br />
-&emsp;&emsp;*We reccomend login in with an already registered account<br />
+&emsp;&emsp;*We reccomend logging in with an already registered account<br />
 &emsp;&emsp;so you can see the messages that's been send<br />
 <br />
-2).Chat Box: to get started you need to add a contact using the contact-plus,<br />
-&emsp;&emsp;&emsp;&emsp;you need to inser contact username and then press add to send and<br />
+2).Chat Box: to get started you need to add a contact using the contact plus icon,<br />
+&emsp;&emsp;&emsp;&emsp;you need to insert contact username and then press add to send and<br />
 &emsp;&emsp;&emsp;&emsp;view messages between a specifec contact.<br />
       <br />
 3).Send Messages:<br />
