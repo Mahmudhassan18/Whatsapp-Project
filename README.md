@@ -1,7 +1,7 @@
 # Whatsapp-Project
 Advance Programming 2 course first project<br />
-Names + id
-Ilay Daniel 326646650
+Mahmud Hassan 208247825<br />
+Ilay Daniel 326646650<br />
 
 1).Login : first step to get to the chat box which can be done in two ways:<br />
 &emsp;&emsp;a).You can Signup and login in with the account you made<br />
