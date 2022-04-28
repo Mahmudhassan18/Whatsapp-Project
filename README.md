@@ -6,7 +6,7 @@ Ilay Daniel 326646650<br />
 1).Login : first step to get to the chat box which can be done in two ways:<br />
 &emsp;&emsp;a).You can Signup and login in with the account you made<br />
 &emsp;&emsp;signing up requireds all filds except for images, which<br />
-&emsp;&emsp;if you don't fill out in load a Deafult image.<br />
+&emsp;&emsp;if you don't fill out it loads a Deafult image.<br />
 &emsp;&emsp;b).Login in with an already made up account:<br />
 &emsp;&emsp;&emsp;&emsp;i).HarryPotter : Wizard1<br />
 &emsp;&emsp;&emsp;&emsp;ii).LukeSkywalker : Jedi2<br />
