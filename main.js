@@ -136,9 +136,7 @@ document.getElementById("sendAudioMessageButton").addEventListener("click", () =
         alert("You haven't recorded a message yet");
     }
 });
-
-sendTextMessageButton.addEventListener("click", () => { sendMessage(new TextMessage(loggedUser)); });
-
+sendTextMessageButton.addEventListener("click", () => { sendMessage(new TextMessage(loggedUser, text_message_to_send.value)); });
 document.getElementById("closeMicrophoneModalButton").addEventListener("click", () => { messageInputAudioObjectURL = null; });
 
 
@@ -147,13 +145,30 @@ class TextMessage {
     constructor(senderId, content) {
         this.senderId = senderId;
         this.date = new Date();
-        this.content = text_message_to_send.value;
+        this.content = this.addNewlines(content);
         /////
         if (content != null) {
-            this.content = content;
+            content = this.addNewlines(content);
         }
         /////
-    } 
+    }
+
+    addNewlines(str) {
+        var result = '';
+        while (str.length > 0) {
+          let lastHundred = str.lastIndexOf(' ', 100);
+          if(lastHundred == -1){
+              result += str.substring(0, 100) + '\n';
+              str = str.substring(100);
+          }
+          else{
+              console.log(lastHundred)
+              result += str.substring(0, lastHundred+1) + '\n';
+              str = str.substring(lastHundred+1);
+          }
+        }
+        return result;
+      }
 
     writeMessageInDocument(wasSentByLoggedUser) {
         const rowDiv = document.createElement("div");
