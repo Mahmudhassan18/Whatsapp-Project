@@ -230,7 +230,13 @@ class TextMessage {
         this.date = new Date();
         this.content = this.addNewlines(content);
     }
-
+/**
+ * Adds a new line after every 100 chars
+ * if a space found in first 100 chars it adds a new line to the last space
+ * if not it adds a new line at index 100
+ * @param {message that's being sent} str 
+ * @returns new message with new line every 100 chars
+ */
     addNewlines(str) {
         let result = '';
         while (str.length > 0) {
@@ -703,11 +709,6 @@ function signUp() {
     //check if every filed is not empty
     if (inputUsername_signup_val == "" || inputNickname_val == "" || inputPassword_signup_val == "" || passwordVerfication_val == "") {
         alert("You must fill all fields");
-        return;
-    }
-
-    if (inputUsername_signup_val.includes(":")) {
-        alert("The username cannot include a ':' character");
         return;
     }
 
