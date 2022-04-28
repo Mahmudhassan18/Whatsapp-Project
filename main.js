@@ -753,7 +753,7 @@ function signUp() {
 
     //cehck if user didn't enter an images it put the default image
     if (inputPfp.value == ""){
-        var inputPfp_val = "defaultProfile.jpeg"
+        var inputPfp_val = "images/defaultProfile.jpeg"
     } else {
         var inputPfp_val = URL.createObjectURL(inputPfp.files[0]);
     }
