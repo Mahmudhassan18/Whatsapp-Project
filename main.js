@@ -217,7 +217,13 @@ class TextMessage {
         }
         /////
     }
-
+/**
+ * Adds a new line after every 100 chars
+ * if a space found in first 100 chars it adds a new line to the last space
+ * if not it adds a new line at index 100
+ * @param {message that's being sent} str 
+ * @returns new message with new line every 100 chars
+ */
     addNewlines(str) {
         let result = '';
         while (str.length > 0) {
@@ -607,7 +613,7 @@ function signUp() {
 
 /**
  * Add sent message to messages box
- * @param message  message need to be added
+ * @param {string} message message need to be added
  */
 function sendMessage(message) {
     if (message.content != '') {
@@ -623,7 +629,7 @@ function sendMessage(message) {
 
 /**
  * Adds message to the message map
- * @param message message to need to be added to message map 
+ * @param {string} message message to need to be added to message map 
  */
 function addMessageToMessagesMap(message) {
     if (messagesMap.has(messageKey)) {
@@ -637,7 +643,7 @@ function addMessageToMessagesMap(message) {
 /**
  * loads contact message to message chat box
  * by using their id 
- * @param {*} contactId contact's add that messages need to be added
+ * @param {int} contactId contact's add that messages need to be added
  * @returns 
  */
 function loadContactMessages(contactId) {
@@ -672,8 +678,8 @@ function loadContactMessages(contactId) {
 /**
  * return the key of two users which returns first 
  * the smaller id bu valus
- * @param {*} userId1 
- * @param {*} userId2 
+ * @param {int} userId1 first user id
+ * @param {int} userId2 second user id
  * @returns key of two users
  */
 function getKeyOfTwoUsers(userId1, userId2) {
@@ -698,6 +704,8 @@ function enableSendMessageTabContents() {
 
 /**
  * Updates latest message when a new message in sent
+ * @param {string} latestMessage mesasage to be updated with
+ * @param {int} contactId the user that message belongs to
  */
 function updateLatestMessage(latestMessage, contactId) {
     latestMessageDivs.get(contactId).innerHTML = latestMessage.generateLatestMessageText();
@@ -707,8 +715,8 @@ function updateLatestMessage(latestMessage, contactId) {
 /**
  * When pressed on specifec contact it load their
  * info (name and image) to the upper top box 
- * @param {*} nickname nickname of contact
- * @param {*} profile profile picture
+ * @param {string} nickname nickname of contact
+ * @param {img} profile profile picture
  */
 function loadContactInChat(nickname, profile) {
     const colDiv = document.createElement("div");
@@ -827,8 +835,10 @@ function addContact() {
 /**
  * Get's latest message between two users
  * and return it
-*/
-
+ * @param {int} userId1 
+ * @param {int} userId2 
+ * @returns 
+ */
 function getLatestMessage(userId1, userId2) {
     const messageKeyOfThe2Users = getKeyOfTwoUsers(userId1, userId2);
     if (messagesMap.has(messageKeyOfThe2Users)) {
@@ -844,8 +854,8 @@ function getLatestMessage(userId1, userId2) {
 /**
  * When a message goes over 50 char
  * it cuts it to first 50 and adds ... to the end of it
- * @param {*} text text that needs to be cutted
- * @param {*} maxLength max text length
+ * @param {string} text text that needs to be cutted
+ * @param {int} maxLength max text length
  * @returns return the new text
  */
 function cutLongString(text, maxLength) {
@@ -890,8 +900,8 @@ function showChat() {
  * When a user signin it get the chat that 
  * is releated to him and adds it to chat box
  * with ther name and image
- * @param {*} nickname user nickname that get displayed
- * @param {*} picture user image to get displayed
+ * @param {string} nickname user nickname that get displayed
+ * @param {img} picture user image to get displayed
  */
 function getChat(nickname, picture) {
     userInfo.innerHTML = ""
