@@ -104,8 +104,8 @@ document.getElementById("registerButton").addEventListener("click", hideLogin);
 document.getElementById("signUpButton").addEventListener("click", signUp);
 document.getElementById("alreadyRegisteredButton").addEventListener("click", hideSignup);
 document.getElementById("addContactButton").addEventListener("click", addContact);
-document.getElementById("sendImageMessageButton").addEventListener("click", () => { sendMessage(new ImageMessage(loggedUser)); });
-document.getElementById("sendVideoMessageButton").addEventListener("click", () => { sendMessage(new VideoMessage(loggedUser)); });
+document.getElementById("sendImageMessageButton").addEventListener("click", () => { sendMessage(new ImageMessage(loggedUser, URL.createObjectURL(messageInputImage.files[0]))); });
+document.getElementById("sendVideoMessageButton").addEventListener("click", () => { sendMessage(new VideoMessage(loggedUser, URL.createObjectURL(messageInputVideo.files[0]))); });
 document.getElementById("sendAudioMessageButton").addEventListener("click", () => {
     if (messageInputAudioObjectURL != null) {
         sendMessage(new AudioMessage(loggedUser));
@@ -158,10 +158,10 @@ class TextMessage {
 
 
 class ImageMessage {
-    constructor(senderId) {
+    constructor(senderId, content) {
         this.senderId = senderId;
         this.date = new Date();
-        this.content = URL.createObjectURL(messageInputImage.files[0]);
+        this.content = content;
     }
 
     writeMessageInDocument(wasSentByLoggedUser) {
@@ -251,10 +251,10 @@ class ImageMessage {
 
 
 class VideoMessage {
-    constructor(senderId) {
+    constructor(senderId, content) {
         this.senderId = senderId;
         this.date = new Date();
-        this.content = URL.createObjectURL(messageInputVideo.files[0]);
+        this.content = content;
     }
 
     writeMessageInDocument(wasSentByLoggedUser) {
@@ -396,14 +396,10 @@ class AudioMessage {
     }
 }
 
-
 messagesMap.set("0:1", [new TextMessage(0, "I'm a wizard"), new TextMessage(1, "I'm a jedi")]);
 messagesMap.set("0:2", [new TextMessage(2, "I'm a time traveler"), new TextMessage(0, "I also time traveled in my third book")]);
 messagesMap.set("1:2", [new TextMessage(2, "Did you ever hear the tragedy of Darth Plagueis The Wise?"), new TextMessage(1, "Yup...")]);
-messagesMap.set("3:4", [new TextMessage(3, "GOOD GAME TODAY"), new TextMessage(4, "Appreciate That!!")]);
-
-
-
+messagesMap.set("3:4", [new TextMessage(3, "GOOD GAME TODAY"), new ImageMessage(3, "images/lebronstats.jpeg"), new TextMessage(4, "Appreciate That!!")]);
 
 function logIn() {
     const inputUsername_login_val = inputUsername_login.value;
@@ -567,6 +563,7 @@ function loadContactInChat(nickname, profile) {
     userImg.style.width = "60px";
     userImg.style.height = "60px";
     userImg.style.borderRadius = "50%";
+    userImg.style.marginRight = "5px";
     colDiv.setAttribute("class", "col", "user");;
     userImg.className = "contact-profile";
 
@@ -707,7 +704,7 @@ function getChat(nickname, picture) {
     userImg.src = picture;
     userImg.style.width = "60px";
     userImg.style.borderRadius = "50%";
-    userImg.style.paddingRight = "5px";
+    userImg.style.marginRight = "5px";
     const nicknameTextNode = document.createTextNode(nickname);
 
     userInfo.appendChild(userImg);
