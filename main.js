@@ -235,7 +235,7 @@ class TextMessage {
      * Adds a new line after every 100 chars
      * if a space found in first 100 chars it adds a new line to the last space
      * if not it adds a new line at index 100
-     * @param {message that's being sent} str 
+     * @param {string} str message that's being sent
      * @returns new message with new line every 100 chars
      */
     addNewlines(str) {
