@@ -689,7 +689,6 @@ function getChat(nickname, picture) {
     userImg.src = picture;
     userImg.style.width = "60px";
     userImg.style.borderRadius = "50%";
-    userImg.style.paddingRight = "5px";
     const nicknameTextNode = document.createTextNode(nickname);
 
     userInfo.appendChild(userImg);
