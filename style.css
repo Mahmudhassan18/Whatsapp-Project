@@ -182,3 +182,11 @@ body {
 #chatAndContactsRow {
     height:80vh;
 }
+
+.not-registered.already-registered{
+    text-align: center;
+}
+
+.add-contact-arrow{
+    margin-right: 15px;
+}
