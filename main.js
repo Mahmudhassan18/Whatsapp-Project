@@ -230,13 +230,14 @@ class TextMessage {
         this.date = new Date();
         this.content = this.addNewlines(content);
     }
-/**
- * Adds a new line after every 100 chars
- * if a space found in first 100 chars it adds a new line to the last space
- * if not it adds a new line at index 100
- * @param {message that's being sent} str 
- * @returns new message with new line every 100 chars
- */
+
+    /**
+     * Adds a new line after every 100 chars
+     * if a space found in first 100 chars it adds a new line to the last space
+     * if not it adds a new line at index 100
+     * @param {message that's being sent} str 
+     * @returns new message with new line every 100 chars
+     */
     addNewlines(str) {
         let result = '';
         while (str.length > 0) {
