@@ -510,6 +510,13 @@ messagesMap.set("0:2", [new TextMessage(2, "I'm a time traveler"), new TextMessa
 messagesMap.set("1:2", [new TextMessage(2, "Did you ever hear the tragedy of Darth Plagueis The Wise?"), new TextMessage(1, "Yup...")]);
 messagesMap.set("3:4", [new TextMessage(3, "GOOD GAME TODAY"), new ImageMessage(3, "images/lebronstats.jpeg"), new TextMessage(4, "Appreciate That!!")]);
 
+/**
+ * Login functions checks wheter the username and password
+ * that got entered is found in users map, and triggers
+ * show chat function that shoes chat file
+ * and getchat that get the chat of a the specific user
+ * @returns 
+ */
 function logIn() {
     const inputUsername_login_val = inputUsername_login.value;
     const inputPassword_login_val = inputPassword_login.value;
@@ -525,12 +532,18 @@ function logIn() {
     alert("Wrong username or password");
 }
 
+/**
+ * signup function that allow new users to sign in and adds them to users map
+ * and does regular check oover password and username entered
+ * @returns 
+ */
 function signUp() {
+    //gets values entered
     const inputUsername_signup_val = inputUsername_signup.value;
     const inputNickname_val = inputNickname.value;
     const inputPassword_signup_val = inputPassword_signup.value;
     const passwordVerfication_val = passwordVerfication.value;
-
+    //check if every filed is not empty
     if (inputUsername_signup_val == "" || inputNickname_val == "" || inputPassword_signup_val == "" || passwordVerfication_val == "") {
         alert("You must fill all fields");
         return;
@@ -541,6 +554,7 @@ function signUp() {
         return;
     }
 
+    //Checks if user alreadu exists
     for (let i = 0; i < amountOfUsers; i++) {
         if (inputUsername_signup_val == usersArr[i].username) {
             alert("There already exists a user with this username");
@@ -548,6 +562,7 @@ function signUp() {
         }
     }
 
+    //does normal check over password entered (length, uppercase, etc...)
     const passwordLen = inputPassword_signup_val.length;
     let isThereADigit = false;
     let isThereAnUppercaseLetter = false;
@@ -577,23 +592,39 @@ function signUp() {
 
     amountOfUsers++;
 
+    //cehck if user didn't enter an images it put the default image
     if (inputPfp.value == ""){
         var inputPfp_val = "defaultProfile.jpeg"
     } else {
         var inputPfp_val = URL.createObjectURL(inputPfp.files[0]);
     }
 
+    //adds user to userarr
     usersArr.push(new User(amountOfUsers - 1, inputUsername_signup_val, inputNickname_val, inputPassword_signup_val, inputPfp_val));
 
     hideSignup();
 }
 
+/**
+ * Add sent message to messages box
+ * @param message  message need to be added
+ */
 function sendMessage(message) {
-    addMessageToMessagesMap(message);
-    message.writeMessageInDocument(message, true);
-    updateLatestMessage(message, sendTo);
+    if (message.content != '') {
+        //adds to message map
+        addMessageToMessagesMap(message);
+        //writes message in document
+        message.writeMessageInDocument(message, true);
+        //updates latest message
+        updateLatestMessage(message, sendTo);
+        scrollChat();
+    }
 }
 
+/**
+ * Adds message to the message map
+ * @param message message to need to be added to message map 
+ */
 function addMessageToMessagesMap(message) {
     if (messagesMap.has(messageKey)) {
         messagesList = messagesMap.get(messageKey);
@@ -603,6 +634,12 @@ function addMessageToMessagesMap(message) {
     }
 }
 
+/**
+ * loads contact message to message chat box
+ * by using their id 
+ * @param {*} contactId contact's add that messages need to be added
+ * @returns 
+ */
 function loadContactMessages(contactId) {
     if (contactId == sendTo) {
         return;
@@ -632,6 +669,13 @@ function loadContactMessages(contactId) {
     }
 }
 
+/**
+ * return the key of two users which returns first 
+ * the smaller id bu valus
+ * @param {*} userId1 
+ * @param {*} userId2 
+ * @returns key of two users
+ */
 function getKeyOfTwoUsers(userId1, userId2) {
     if (userId1 < userId2) {
         var key = userId1 + ":" + userId2;
@@ -641,6 +685,9 @@ function getKeyOfTwoUsers(userId1, userId2) {
     return key;
 }
 
+/**
+ * Enables all button when pressed on a contact
+ */
 function enableSendMessageTabContents() {
     imageButton.disabled = false;
     videoButton.disabled = false;
@@ -649,11 +696,20 @@ function enableSendMessageTabContents() {
     sendTextMessageButton.disabled = false;
 }
 
+/**
+ * Updates latest message when a new message in sent
+ */
 function updateLatestMessage(latestMessage, contactId) {
     latestMessageDivs.get(contactId).innerHTML = latestMessage.generateLatestMessageText();
     latestMessageDateDivs.get(contactId).innerHTML = latestMessage.date.toUTCString();
 }
 
+/**
+ * When pressed on specifec contact it load their
+ * info (name and image) to the upper top box 
+ * @param {*} nickname nickname of contact
+ * @param {*} profile profile picture
+ */
 function loadContactInChat(nickname, profile) {
     const colDiv = document.createElement("div");
     const userImg = document.createElement("img");
@@ -674,6 +730,11 @@ function loadContactInChat(nickname, profile) {
     contactInChat.appendChild(colDiv);
 }
 
+/**
+ * When pressed on add contact button, to add an already existing cxontact
+ * it add then to the left side of the screen in contact area,
+ * and also check if contact exists in contacts array
+ */
 function addContact() {
     const inputContact_val = inputContact.value;
     if (inputContact_val == "") {
@@ -688,16 +749,19 @@ function addContact() {
             break;
         }
     }
+    //if enterd contact doed not exist
     if (contact == null) {
         alert("There is no user with this username");
         return;
     }
 
+    //check if added contact is same as logged one
     if (contact.userId == loggedUser) {
         alert("You cannot add yourself as a contact");
         return;
     }
 
+    //check if contact already added
     if (addedContacts.has(contact.userId)) {
         alert("This contact has already been added")
         return;
@@ -709,6 +773,7 @@ function addContact() {
         hasAContactBeenAdded = true;
     }
 
+    //get's added contact latest message
     const latestMessage = getLatestMessage(loggedUser, contact.userId);
     if (latestMessage == null) {
         var latestMessageGeneratedText = "";
@@ -718,6 +783,7 @@ function addContact() {
         var latestMessageDate = latestMessage.date.toUTCString();
     }
 
+    //creats html file to add to the document
     const listItemOfContact = document.createElement("li");
     listItemOfContact.className = "list-group-item d-flex justify-content-between align-items-start";
     listItemOfContact.addEventListener("click", () => {loadContactMessages(contact.userId); loadContactInChat(contact.nickname, contact.pfp);});
@@ -758,6 +824,11 @@ function addContact() {
     inputContact.value = "";
 }
 
+/**
+ * Get's latest message between two users
+ * and return it
+*/
+
 function getLatestMessage(userId1, userId2) {
     const messageKeyOfThe2Users = getKeyOfTwoUsers(userId1, userId2);
     if (messagesMap.has(messageKeyOfThe2Users)) {
@@ -770,6 +841,13 @@ function getLatestMessage(userId1, userId2) {
     }
 }
 
+/**
+ * When a message goes over 50 char
+ * it cuts it to first 50 and adds ... to the end of it
+ * @param {*} text text that needs to be cutted
+ * @param {*} maxLength max text length
+ * @returns return the new text
+ */
 function cutLongString(text, maxLength) {
     if (text.length > maxLength) {
         return text.substring(0, maxLength - 3) + "...";
@@ -778,18 +856,29 @@ function cutLongString(text, maxLength) {
     }
 }
 
+/**
+ * when login succeeds or signup is pressed
+ * it hides the login screen
+ */
 function hideLogin() {
     event.preventDefault();
     signupBox.style.visibility = "visible";
     loginBox.style.visibility = "hidden";
 }
 
+/**
+ * when signup succeeds or login is pressed
+ * it hides the signup screen
+ */
 function hideSignup() {
     event.preventDefault();
     signupBox.style.visibility = "hidden";
     loginBox.style.visibility = "visible";
 }
 
+/**
+ * when login succeeds it shows chat box screen
+ */
 function showChat() {
     event.preventDefault();
     signupBox.style.visibility = "hidden";
@@ -797,9 +886,16 @@ function showChat() {
     chatBox.style.visibility = "visible";
 }
 
+/**
+ * When a user signin it get the chat that 
+ * is releated to him and adds it to chat box
+ * with ther name and image
+ * @param {*} nickname user nickname that get displayed
+ * @param {*} picture user image to get displayed
+ */
 function getChat(nickname, picture) {
     userInfo.innerHTML = ""
-
+    //creats html document to add to the main document
     const userImg = document.createElement("img");
     userImg.src = picture;
     userImg.style.width = "60px";
@@ -811,6 +907,10 @@ function getChat(nickname, picture) {
     userInfo.appendChild(nicknameTextNode);
 }
 
+/**
+ * Whenever a chat is sent it scroll to the bottom
+ * to show the new chat
+ */
 function scrollChat(){
     sentChat.scrollTop = sentChat.scrollHeight;
 }
