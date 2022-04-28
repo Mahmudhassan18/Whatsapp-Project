@@ -1,46 +1,61 @@
-const usersObj = [
-    {
-        userId: 0,
-        username: "HarryPotter",
-        nickname: "Harry",
-        password: "Wizard1",
-        pfp: "images/Harry_Potter.jpg",
-    },
-    {
-        userId: 1,
-        username: "LukeSkywalker",
-        nickname: "Luke",
-        password: "Jedi2",
-        pfp: "images/Luke_Skywalker.png"
-    },
-    {
-        userId: 2,
-        username: "MartyMcFly",
-        nickname: "Marty",
-        password: "TimeTraveler3",
-        pfp: "images/Marty_McFly.jpg"
-    },
-    {
-        userId: 3,
-        username: "KobeBryant",
-        nickname: "Kobe",
-        password: "Mamba24",
-        pfp: "images/kobe.jpeg"
-    },
-    {
-        userId: 4,
-        username: "LebronJames",
-        nickname: "Lebron",
-        password: "King23",
-        pfp: "images/lebron.jpeg"
+//The code is wrapped in a self invoked function in order to avoid polluting the global namespace.
+(function(){
+
+/**
+ * A user. Can log into the site and chat with other users.
+ * Users have their own userIds, username, nicknames, passwords and profile pictures.
+ * 
+ * @class User
+ */
+class User {
+    constructor(userId, username, nickname, password, pfp) {
+        this.userId = userId;
+        this.username = username;
+        this.nickname = nickname;
+        this.password = password;
+        this.pfp = pfp;
     }
+}
+
+/**
+ * The array of all the different users which the website recognizes.
+ */
+const usersArr = [
+    new User(0, "HarryPotter", "Harry", "Wizard1", "images/Harry_Potter.jpg"),
+    new User(1, "LukeSkywalker", "Luke", "Jedi2", "images/Luke_Skywalker.png"),
+    new User(2, "MartyMcFly", "Marty", "TimeTraveler3", "images/Marty_McFly.jpg"),
+    new User(3, "KobeBryant", "Kobe", "Mamba24", "images/kobe.jpeg"),
+    new User(4, "LebronJames", "Lebron", "King23", "images/lebron.jpeg")
 ];
 
-const MAX_LATEST_MESSAGE_LENGTH = 60;
+/**
+ * The largest amount of characters the text in the added contacts list
+ * of the latest message from a contact can have. If the latest message
+ * is longer than this length, then its end is replaced with an ellipsis.
+ */
+const MAX_LATEST_MESSAGE_LENGTH = 50;
 
+/**
+ * A map which stores all the messages sent between users.
+ * The keys are made up of the userIds of 2 users (the smaller one
+ * being the first so 2 users will always generate the same key).
+ * The values are arrays of messages.
+ */
 const messagesMap = new Map();
+
+/**
+ * The userId of the user which has logged into the website.
+ */
 var loggedUser = null;
+
+/**
+ * The userId of the selected contact which we can send messages to.
+ */
 var sendTo = null;
+
+/**
+ * The key for the messagesMap of the logged user and the sendTo user.
+ */
 var messageKey = null;
 
 var areSendMessageTabContentsEnabled = false;
@@ -104,8 +119,15 @@ document.getElementById("registerButton").addEventListener("click", hideLogin);
 document.getElementById("signUpButton").addEventListener("click", signUp);
 document.getElementById("alreadyRegisteredButton").addEventListener("click", hideSignup);
 document.getElementById("addContactButton").addEventListener("click", addContact);
-document.getElementById("sendImageMessageButton").addEventListener("click", () => { sendMessage(new ImageMessage(loggedUser, URL.createObjectURL(messageInputImage.files[0]))); });
-document.getElementById("sendVideoMessageButton").addEventListener("click", () => { sendMessage(new VideoMessage(loggedUser, URL.createObjectURL(messageInputVideo.files[0]))); });
+
+document.getElementById("sendImageMessageButton").addEventListener("click", () => {
+    sendMessage(new ImageMessage(loggedUser, URL.createObjectURL(messageInputImage.files[0])));
+});
+
+document.getElementById("sendVideoMessageButton").addEventListener("click", () => {
+    sendMessage(new VideoMessage(loggedUser, URL.createObjectURL(messageInputVideo.files[0])));
+});
+
 document.getElementById("sendAudioMessageButton").addEventListener("click", () => {
     if (messageInputAudioObjectURL != null) {
         sendMessage(new AudioMessage(loggedUser));
@@ -114,7 +136,9 @@ document.getElementById("sendAudioMessageButton").addEventListener("click", () =
         alert("You haven't recorded a message yet");
     }
 });
+
 sendTextMessageButton.addEventListener("click", () => { sendMessage(new TextMessage(loggedUser)); });
+
 document.getElementById("closeMicrophoneModalButton").addEventListener("click", () => { messageInputAudioObjectURL = null; });
 
 
@@ -404,12 +428,12 @@ messagesMap.set("3:4", [new TextMessage(3, "GOOD GAME TODAY"), new ImageMessage(
 function logIn() {
     const inputUsername_login_val = inputUsername_login.value;
     const inputPassword_login_val = inputPassword_login.value;
-    const amountOfUsers = usersObj.length;
+    const amountOfUsers = usersArr.length;
     for (let i = 0; i < amountOfUsers; i++) {
-        if (inputUsername_login_val.toLowerCase() == usersObj[i].username.toLowerCase() && inputPassword_login_val == usersObj[i].password) {
-            loggedUser = usersObj[i].userId;
+        if (inputUsername_login_val.toLowerCase() == usersArr[i].username.toLowerCase() && inputPassword_login_val == usersArr[i].password) {
+            loggedUser = usersArr[i].userId;
             showChat();
-            getChat(usersObj[i].nickname, usersObj[i].pfp);
+            getChat(usersArr[i].nickname, usersArr[i].pfp);
             return;
         }
     }
@@ -433,7 +457,7 @@ function signUp() {
     }
 
     for (let i = 0; i < amountOfUsers; i++) {
-        if (inputUsername_signup_val == usersObj[i].username) {
+        if (inputUsername_signup_val == usersArr[i].username) {
             alert("There already exists a user with this username");
             return;
         }
@@ -474,13 +498,7 @@ function signUp() {
         var inputPfp_val = URL.createObjectURL(inputPfp.files[0]);
     }
 
-    usersObj.push({
-        userId: amountOfUsers - 1,
-        username: inputUsername_signup_val,
-        nickname: inputNickname_val,
-        password: inputPassword_signup_val,
-        pfp: inputPfp_val
-    });
+    usersArr.push(new User(amountOfUsers - 1, inputUsername_signup_val, inputNickname_val, inputPassword_signup_val, inputPfp_val));
 
     hideSignup();
 }
@@ -583,8 +601,8 @@ function addContact() {
 
     let contact = null;
     for (let i = 0; i < amountOfUsers; i++) {
-        if (inputContact_val.toLowerCase() == usersObj[i].username.toLowerCase()) {
-            contact = usersObj[i];
+        if (inputContact_val.toLowerCase() == usersArr[i].username.toLowerCase()) {
+            contact = usersArr[i];
             break;
         }
     }
@@ -634,19 +652,19 @@ function addContact() {
 
     const nicknameDiv = document.createElement("div");
     nicknameDiv.className = "fw-bold";
-    nicknameDiv.innerHTML = contact.nickname;
+    nicknameDiv.appendChild(document.createTextNode(contact.nickname));
 
     contactDataDiv.appendChild(nicknameDiv);
 
     const latestMessageDiv = document.createElement("div");
-    latestMessageDiv.innerHTML = latestMessageGeneratedText;
+    latestMessageDiv.appendChild(document.createTextNode(latestMessageGeneratedText));
 
     latestMessageDivs.set(contact.userId, latestMessageDiv);
     contactDataDiv.appendChild(latestMessageDiv);
 
     const latestMessageDateDiv = document.createElement("div");
     latestMessageDateDiv.className = "latest-message-date";
-    latestMessageDateDiv.innerHTML = latestMessageDate;
+    latestMessageDateDiv.appendChild(document.createTextNode(latestMessageDate));
 
     latestMessageDateDivs.set(contact.userId, latestMessageDateDiv);
     contactDataDiv.appendChild(latestMessageDateDiv);
@@ -762,3 +780,5 @@ async function stopRecording() {
     messageInputAudioObjectURL = await audioRecorder.stop();
     audioRecorder = null;
 }
+
+})();
